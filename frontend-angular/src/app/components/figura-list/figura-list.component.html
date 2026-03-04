@@ -2,39 +2,78 @@
 <!-- Template para mostrar lista de figuras en una tabla Bootstrap con opciones CRUD -->
 
 <div class="container mt-4">
-  <h2 class="mb-4">Colección de Figuras de Anime</h2>
-
-  <!-- Mensaje de error -->
-  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
-
-  <!-- Loading -->
-  <div *ngIf="loading" class="text-center my-5">
-    <div class="spinner-border" role="status">
-      <span class="visually-hidden">Cargando...</span>
+  <!-- Header -->
+  <div class="d-flex flex-wrap align-items-center justify-content-between mb-3">
+    <h2 class="mb-0">Colección de Figuras de Anime</h2>
+    <div class="input-group w-auto">
+      <input type="text" class="form-control" placeholder="Buscar..." [(ngModel)]="search">
+      <button class="btn btn-primary ms-2" (click)="irACrear()">
+        <i class="bi bi-plus-lg"></i> Nueva
+      </button>
     </div>
   </div>
 
-  <!-- Lista de figuras -->
-  <div class="row g-3" *ngIf="!loading && figuras.length">
-    <div class="col-md-4" *ngFor="let figura of figuras">
-      <div class="card h-100">
-        <div class="card-body">
-          <h5 class="card-title">{{ figura.nombre }}</h5>
-          <p class="card-text mb-1"><b>Anime:</b> {{ figura.anime }}</p>
-          <p class="card-text mb-1"><b>Personaje:</b> {{ figura.personaje || '-' }}</p>
-          <p class="card-text mb-1"><b>Precio:</b> {{ figura.precio }}€</p>
-          <p class="card-text mb-2"><b>Stock:</b> {{ figura.stock }}</p>
-          <div *ngIf="figura.imagen && figura.imagen.startsWith('http')" class="mb-2">
-            <img [src]="figura.imagen" [alt]="figura.nombre" class="img-fluid rounded" style="max-height: 160px; object-fit: cover;">
-          </div>
-          <button class="btn btn-danger btn-sm" (click)="eliminarFigura(figura._id)">Eliminar</button>
-        </div>
-      </div>
-    </div>
+  <!-- Alertas -->
+  <div *ngIf="loading" class="alert alert-info d-flex align-items-center gap-2">
+    <div class="spinner-border spinner-border-sm" role="status"></div>
+    <span>Cargando...</span>
+  </div>
+  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+  <div *ngIf="success" class="alert alert-success">{{ success }}</div>
+
+  <!-- Tabla de figuras -->
+  <div class="table-responsive" *ngIf="!loading && filtradas.length">
+    <table class="table table-striped align-middle">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Anime</th>
+          <th>Personaje</th>
+          <th>Precio</th>
+          <th>Stock</th>
+          <th class="text-center">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let figura of filtradas">
+          <td>{{ figura.nombre }}</td>
+          <td>{{ figura.anime }}</td>
+          <td>{{ figura.personaje || '-' }}</td>
+          <td>{{ figura.precio | currency:'EUR':'symbol':'1.0-2' }}</td>
+          <td>{{ figura.stock }}</td>
+          <td class="text-center">
+            <button class="btn btn-outline-info btn-sm me-1" [routerLink]="['/figuras', figura._id]">
+              <i class="bi bi-eye"></i> Detalle
+            </button>
+            <button class="btn btn-outline-secondary btn-sm me-1" (click)="editarFigura(figura)">
+              <i class="bi bi-pencil"></i> Editar
+            </button>
+            <button class="btn btn-outline-danger btn-sm" (click)="eliminarFigura(figura._id)">
+              <i class="bi bi-trash"></i> Eliminar
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 
   <!-- Sin figuras -->
-  <div *ngIf="!loading && !figuras.length" class="alert alert-info">
+  <div *ngIf="!loading && !filtradas.length" class="alert alert-info">
     No hay figuras en la colección.
   </div>
+
+  <!-- Paginación -->
+  <nav *ngIf="totalPages > 1" aria-label="Paginación">
+    <ul class="pagination justify-content-center mt-3">
+      <li class="page-item" [class.disabled]="page === 1">
+        <button class="page-link" (click)="setPage(page - 1)">&laquo;</button>
+      </li>
+      <li class="page-item" *ngFor="let p of [].constructor(totalPages); let i = index" [class.active]="page === (i+1)">
+        <button class="page-link" (click)="setPage(i+1)">{{ i+1 }}</button>
+      </li>
+      <li class="page-item" [class.disabled]="page === totalPages">
+        <button class="page-link" (click)="setPage(page + 1)">&raquo;</button>
+      </li>
+    </ul>
+  </nav>
 </div>

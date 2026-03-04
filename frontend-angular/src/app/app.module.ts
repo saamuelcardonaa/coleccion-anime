@@ -8,18 +8,28 @@ import { ReactiveFormsModule } from '@angular/forms';   // Para formularios reac
 import { FormsModule } from '@angular/forms';           // Para two-way binding
 import { AppRoutingModule } from './app-routing.module'; // Para el routing
 
+import { FiguraListComponent } from './components/figura-list/figura-list.component';
+import { FiguraFormComponent } from './components/figura-form/figura-form.component';
+import { JikanSearchComponent } from './components/jikan-search/jikan-search.component';
 import { AppComponent } from './app.component';
 import { FiguraListComponent } from './components/figura-list/figura-list.component';
 import { FiguraFormComponent } from './components/figura-form/figura-form.component';
 import { JikanSearchComponent } from './components/jikan-search/jikan-search.component';
+import { FiguraDetailComponent } from './components/figura-detail/figura-detail.component';
 
 @NgModule({
   // Declaraciones: componentes que pertenecen a este módulo
-  declarations: [
     AppComponent,
     FiguraListComponent,
     FiguraFormComponent,
     JikanSearchComponent
+  ],
+  declarations: [
+    AppComponent,
+    FiguraListComponent,
+    FiguraFormComponent,
+    JikanSearchComponent,
+    FiguraDetailComponent
   ],
 
   // Importaciones: módulos externos que se necesitan

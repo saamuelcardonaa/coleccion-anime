@@ -1,10 +1,10 @@
 // src/app/components/figura-form/figura-form.component.ts
 // Componente formulario para crear o editar una figura.
 // Recibe una figura como input y emite eventos de guardar o cancelar.
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { FiguraService } from '../../services/figura.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { FiguraService, Figura } from '../../services/figura.service';
 
 @Component({
   selector: 'app-figura-form',
@@ -12,21 +12,24 @@ import { FiguraService } from '../../services/figura.service';
   styleUrls: ['./figura-form.component.css']
 })
 export class FiguraFormComponent implements OnInit {
-  // Input: figura a editar (null si es creación nueva)
-  @Input() figura: Figura | null = null;
 
-  // Output: evento que emite cuando se guarda la figura
-  @Output() guardar = new EventEmitter<Figura>();
-
-  // Output: evento que emite cuando se cancela la edición
-  @Output() cancelar = new EventEmitter<void>();
+  id: string | null = null;
+  loading = false;
+  error: string | null = null;
+  success = false;
 
   // Grupo de control del formulario (FormGroup)
   // Maneja la validación y el estado de todos los campos
   formulario!: FormGroup;
+  figura: Figura | null = null;
 
   // Constructor: inyectamos FormBuilder para crear el formulario reactivo
-  constructor(private fb: FormBuilder, private figuraService: FiguraService, private router: Router) {}
+  constructor(
+    private fb: FormBuilder,
+    private figuraService: FiguraService,
+    private route: ActivatedRoute,
+    private router: Router
+  ) {}
 
   /**
    * ngOnInit()
@@ -35,7 +38,21 @@ export class FiguraFormComponent implements OnInit {
    */
   ngOnInit(): void {
     this.crearFormulario();
-    this.llenarFormulario();
+    this.id = this.route.snapshot.paramMap.get('id');
+    if (this.id) {
+      this.loading = true;
+      this.figuraService.getById(this.id).subscribe({
+        next: (figura) => {
+          this.figura = figura;
+          this.llenarFormulario();
+          this.loading = false;
+        },
+        error: (err) => {
+          this.error = 'No se pudo cargar la figura.';
+          this.loading = false;
+        }
+      });
+    }
   }
 
   /**
@@ -75,15 +92,15 @@ export class FiguraFormComponent implements OnInit {
    * Si se está editando una figura, rellena el formulario con sus datos.
    */
   llenarFormulario(): void {
-    if (this.figura && this.figura._id) {
-      // Si figura tiene _id, es edición
+    if (this.figura) {
       this.formulario.patchValue({
         nombre: this.figura.nombre,
         anime: this.figura.anime,
         personaje: this.figura.personaje || '',
         precio: this.figura.precio || 0,
         stock: this.figura.stock || 0,
-        imagen: this.figura.imagen || ''
+        imagen: this.figura.imagen || '',
+        malId: this.figura.malId || ''
       });
     }
   }
@@ -100,35 +117,41 @@ export class FiguraFormComponent implements OnInit {
    * 5. El componente padre llama a figuraService.crearFigura() o .actualizarFigura()
    */
   onSubmit(): void {
-    // Verificar que el formulario sea válido
     if (this.formulario.invalid) {
-      alert('Por favor completa todos los campos requeridos correctamente.');
+      this.error = 'Por favor completa todos los campos requeridos correctamente.';
       return;
     }
-
-    // Obtener los valores del formulario
-    const formValues = this.formulario.value;
-
-    // Crear un objeto Figura con los datos
-    const novaFigura: Figura = {
-      nombre: formValues.nombre,
-      anime: formValues.anime,
-      personaje: formValues.personaje || undefined,
-      precio: formValues.precio || 0,
-      stock: formValues.stock || 0,
-      imagen: formValues.imagen || undefined
-    };
-
-    // Si es edición, incluir el _id original
-    if (this.figura && this.figura._id) {
-      novaFigura._id = this.figura._id;
+    this.loading = true;
+    this.error = null;
+    this.success = false;
+    const payload: Figura = this.formulario.value;
+    if (this.id) {
+      // Editar
+      this.figuraService.update(this.id, payload).subscribe({
+        next: () => {
+          this.success = true;
+          this.loading = false;
+          this.router.navigate(['/figuras']);
+        },
+        error: (err) => {
+          this.error = 'Error al actualizar la figura.';
+          this.loading = false;
+        }
+      });
+    } else {
+      // Crear
+      this.figuraService.create(payload).subscribe({
+        next: () => {
+          this.success = true;
+          this.loading = false;
+          this.router.navigate(['/figuras']);
+        },
+        error: (err) => {
+          this.error = 'Error al crear la figura.';
+          this.loading = false;
+        }
+      });
     }
-
-    // Emitir evento al componente padre con la figura a guardar
-    this.guardar.emit(novaFigura);
-
-    // Redirigir a '/'
-    this.router.navigate(['/']);
   }
 
   /**
@@ -137,6 +160,6 @@ export class FiguraFormComponent implements OnInit {
    * Emite el evento 'cancelar' al componente padre.
    */
   onCancelar(): void {
-    this.cancelar.emit();
+    this.router.navigate(['/figuras']);
   }
 }

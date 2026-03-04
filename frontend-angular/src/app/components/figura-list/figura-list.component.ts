@@ -2,6 +2,7 @@
 // Componente para mostrar lista de figuras en una tabla.
 // Este componente se suscribe al servicio para obtener datos y manejar creación, edición y eliminación.
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { FiguraService, Figura } from '../../services/figura.service';
 
 @Component({
@@ -12,21 +13,15 @@ import { FiguraService, Figura } from '../../services/figura.service';
 export class FiguraListComponent implements OnInit {
   // Array que almacena las figuras obtenidas del backend
   figuras: Figura[] = [];
-
-  // Bandera para mostrar/ocultar el formulario de creación/edición
-  mostrarFormulario = false;
-
-  // Objeto figura que se está editando (null si se está creando una nueva)
-  figuraEdicion: Figura | null = null;
-
-  // Variable para mostrar mensajes de carga
   loading = false;
-
-  // Variable para mostrar mensajes de error
   error: string | null = null;
+  success: string | null = null;
+  search: string = '';
+  page: number = 1;
+  pageSize: number = 10;
 
   // Inyectamos el servicio de figuras en el constructor
-  constructor(private figuraService: FiguraService) {}
+  constructor(private figuraService: FiguraService, private router: Router) {}
 
   /**
    * ngOnInit()
@@ -35,6 +30,9 @@ export class FiguraListComponent implements OnInit {
    */
   ngOnInit(): void {
     this.cargarFiguras();
+    setTimeout(() => {
+      console.log('Figuras cargadas:', this.figuras);
+    }, 1000); // Espera breve para asegurar que el observable se resuelva
   }
 
   /**
@@ -51,6 +49,7 @@ export class FiguraListComponent implements OnInit {
   cargarFiguras(): void {
     this.loading = true;
     this.error = null;
+    this.success = null;
     this.figuraService.getAll().subscribe({
       next: (figuras) => {
         this.figuras = figuras;
@@ -68,9 +67,8 @@ export class FiguraListComponent implements OnInit {
    * Muestra el formulario para crear una nueva figura.
    * Reinicia figuraEdicion a null para indicar que es creación, no edición.
    */
-  abrirFormulario(): void {
-    this.mostrarFormulario = true;
-    this.figuraEdicion = null;
+  irACrear(): void {
+    this.router.navigate(['/figuras/nueva']);
   }
 
   /**
@@ -80,8 +78,9 @@ export class FiguraListComponent implements OnInit {
    * @param figura - La figura a editar
    */
   editarFigura(figura: Figura): void {
-    this.figuraEdicion = { ...figura }; // Copiar la figura para no modificar el original
-    this.mostrarFormulario = true;
+    if (figura._id) {
+      this.router.navigate(['/figuras/editar', figura._id]);
+    }
   }
 
   /**
@@ -91,33 +90,7 @@ export class FiguraListComponent implements OnInit {
    * 
    * @param figura - La figura a guardar
    */
-  guardarFigura(figura: Figura): void {
-    if (figura._id) {
-      // Es una edición: realizar PUT
-      this.figuraService.actualizarFigura(figura._id, figura).subscribe({
-        next: () => {
-          this.cargarFiguras(); // Recargar la lista
-          this.mostrarFormulario = false;
-          alert('Figura actualizada exitosamente');
-        },
-        error: (err) => {
-          alert('Error al actualizar la figura: ' + err.error.message);
-        }
-      });
-    } else {
-      // Es una creación: realizar POST
-      this.figuraService.crearFigura(figura).subscribe({
-        next: () => {
-          this.cargarFiguras(); // Recargar la lista
-          this.mostrarFormulario = false;
-          alert('Figura creada exitosamente');
-        },
-        error: (err) => {
-          alert('Error al crear la figura: ' + err.error.message);
-        }
-      });
-    }
-  }
+  // El método guardarFigura y lógica de formulario embebido se eliminan, ahora todo es por routing
 
   /**
    * eliminarFigura()
@@ -129,8 +102,11 @@ export class FiguraListComponent implements OnInit {
     if (!id) return;
     if (!confirm('¿Seguro que quieres eliminar esta figura?')) return;
     this.loading = true;
+    this.error = null;
+    this.success = null;
     this.figuraService.delete(id).subscribe({
       next: () => {
+        this.success = 'Figura eliminada correctamente.';
         this.cargarFiguras();
       },
       error: (err: any) => {
@@ -144,8 +120,38 @@ export class FiguraListComponent implements OnInit {
    * cerrarFormulario()
    * Oculta el formulario sin guardar cambios.
    */
-  cerrarFormulario(): void {
-    this.mostrarFormulario = false;
-    this.figuraEdicion = null;
+  // El método cerrarFormulario y lógica de formulario embebido se eliminan
+
+  get filtradas(): Figura[] {
+    let filtradas = this.figuras;
+    if (this.search) {
+      const s = this.search.toLowerCase();
+      filtradas = filtradas.filter(f =>
+        f.nombre.toLowerCase().includes(s) ||
+        f.anime.toLowerCase().includes(s) ||
+        (f.personaje && f.personaje.toLowerCase().includes(s))
+      );
+    }
+    const start = (this.page - 1) * this.pageSize;
+    return filtradas.slice(start, start + this.pageSize);
+  }
+
+  get totalPages(): number {
+    let filtradas = this.figuras;
+    if (this.search) {
+      const s = this.search.toLowerCase();
+      filtradas = filtradas.filter(f =>
+        f.nombre.toLowerCase().includes(s) ||
+        f.anime.toLowerCase().includes(s) ||
+        (f.personaje && f.personaje.toLowerCase().includes(s))
+      );
+    }
+    return Math.ceil(filtradas.length / this.pageSize) || 1;
+  }
+
+  setPage(p: number) {
+    if (p >= 1 && p <= this.totalPages) {
+      this.page = p;
+    }
   }
 }
