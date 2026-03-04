@@ -1,19 +1,26 @@
-// app.js
-// Configura y exporta la aplicación Express sin arrancarla.
-// Esto facilita pruebas y separación de responsabilidades (arranque en server.js).
-const express = require('express');
-const figuresRouter = require('./routes/figures');
-const figuraRoutes = require('./routes/figuraRoutes');
+// src/app.js
+// Configuración de la aplicación Express independentemente del servidor.
+// Se exporta `app` para que pueda ser instanciado por `server.js` o por Vercel.
+
+import express from 'express';
+import cors from 'cors';
+import figurasRouter from './routes/figuras.js';
+import { requestLogger } from './middlewares/index.js';
 
 const app = express();
-app.use(express.json());
 
-// Montar rutas de la API
-// Ruta antigua (compatible): /api/figures
-app.use('/api/figures', figuresRouter);
+// Middlewares generales
+app.use(express.json());          // parsea JSON en el cuerpo de las solicitudes
+app.use(cors());                  // habilita CORS para permitir peticiones desde el frontend
+app.use(requestLogger);           // registra cada petición en la consola
 
-// Ruta nueva con estructura mejorada: /figuras
-// Aquí se montan todas las rutas CRUD para el modelo Figura
-app.use('/figuras', figuraRoutes);
+// Versionado de API y ruta principal para figuras
+// /api/v1/figuras -> todos los endpoints CRUD y Jikan
+app.use('/api/v1/figuras', figurasRouter);
 
-module.exports = app;
+// Ruta raíz de salud
+app.get('/', (req, res) => {
+  res.json({ message: 'API Colección Anime en funcionamiento' });
+});
+
+export default app;

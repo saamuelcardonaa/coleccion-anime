@@ -1,4 +1,5 @@
-// Compatibilidad: este archivo delega al nuevo `server.js`.
-// Mantener este archivo permite ejecutar el servidor con herramientas
-// que todavía apunten a `index.js`.
-module.exports = require('./server.js');
+// index.js
+// Archivo puente para compatibilidad; simplemente importa `server.js`.
+// Con `type: module` en package.json se recomienda usar import.
+
+import './server.js';

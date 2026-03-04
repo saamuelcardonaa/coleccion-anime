@@ -1,59 +1,61 @@
 // src/models/Figura.js
-// Esquema Mongoose que representa una figura de anime en la colección.
-// Define la estructura de datos y validaciones para las figuras almacenadas en MongoDB.
-const mongoose = require('mongoose');
+// Modelo único y definitivo para la colección de figuras de anime.
+// Todos los campos requeridos por la especificación están documentados
+// con comentarios claros, apuntando al código pedagógico que leerá un profesor.
 
-// Definir el esquema de la colección "Figura"
-const FiguraSchema = new mongoose.Schema({
-  // nombre: identificador principal de la figura (string, requerido)
-  // Ej: "Saitama Statue", "Naruto POP Figure"
-  nombre: {
-    type: String,
-    required: [true, 'El nombre de la figura es requerido'],
-    trim: true,
+import mongoose from 'mongoose';
+
+// Esquema de Mongoose; produzca automáticamente createdAt/updatedAt
+const FiguraSchema = new mongoose.Schema(
+  {
+    nombre: {
+      type: String,
+      required: [true, 'El nombre de la figura es obligatorio'],
+      trim: true,
+    },
+
+    anime: {
+      type: String,
+      required: [true, 'El nombre del anime es obligatorio'],
+      trim: true,
+    },
+
+    // nombre del personaje representado en la figura (opcional)
+    personaje: {
+      type: String,
+      trim: true,
+    },
+
+    // precio en la moneda local
+    precio: {
+      type: Number,
+      min: [0, 'El precio no puede ser negativo'],
+      default: 0,
+    },
+
+    // cantidad disponible en inventario
+    stock: {
+      type: Number,
+      min: [0, 'El stock no puede ser negativo'],
+      default: 0,
+    },
+
+    // URL de la imagen de la figura (opcional)
+    imagen: {
+      type: String,
+    },
+
+    // ID de MyAnimeList para integración opcional con Jikan API
+    malId: {
+      type: Number,
+    },
   },
+  {
+    timestamps: true, // Añade automáticamente createdAt y updatedAt
+  }
+);
 
-  // anime: nombre del anime del cual proviene la figura (string, requerido)
-  // Ej: "One Punch Man", "Naruto", "Attack on Titan"
-  anime: {
-    type: String,
-    required: [true, 'El anime es requerido'],
-    trim: true,
-  },
+// Evita recompilar modelo durante hot-reload en entornos de desarrollo
+const Figura = mongoose.models.Figura || mongoose.model('Figura', FiguraSchema);
 
-  // personaje: nombre del personaje representado en la figura (string, opcional)
-  // Ej: "Saitama", "Naruto Uzumaki", "Eren Yeager"
-  personaje: {
-    type: String,
-    trim: true,
-  },
-
-  // precio: costo de la figura en unidades monetarias (number)
-  // Ej: 29.99, 49.99
-  precio: {
-    type: Number,
-    default: 0,
-    min: [0, 'El precio no puede ser negativo'],
-  },
-
-  // stock: cantidad de figuras disponibles en inventario (number)
-  // Ej: 5, 10, 0
-  stock: {
-    type: Number,
-    default: 0,
-    min: [0, 'El stock no puede ser negativo'],
-  },
-
-  // imagen: URL de la imagen de la figura (string, opcional)
-  // Ej: "https://ejemplo.com/imagen.jpg"
-  imagen: {
-    type: String,
-  },
-
-  // Timestamps automáticos: createdAt y updatedAt
-  // Se crean o actualizan automáticamente cuando el documento se guarda
-}, { timestamps: true });
-
-// Exportar el modelo "Figura" basado en el esquema definido
-// Esto permite usar este modelo en otros archivos para consultas a la BD
-module.exports = mongoose.model('Figura', FiguraSchema);
+export default Figura;

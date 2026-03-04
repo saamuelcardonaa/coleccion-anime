@@ -1,12 +1,18 @@
 // server.js
-// Punto de entrada del backend (en la raíz de la carpeta `backend`).
-// Carga variables de entorno, conecta a la base de datos y arranca el servidor Express.
-require('dotenv').config();
-const connectDB = require('./src/config/db');
-const app = require('./src/app');
+// Archivo de arranque local. No se usa en Vercel pero queda disponible
+// para desarrollo (`npm run dev`) o despliegues tradicionales.
 
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/coleccion-anime';
-connectDB(MONGO_URI);
+import 'dotenv/config';
+import connectDB from './src/config/db.js';
+import app from './src/app.js';
 
+// La variable de entorno debe llamarse MONGODB_URI según la especificación.
+// Si no está presente, usamos el valor por defecto para entornos locales.
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/coleccion-anime';
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Servidor backend escuchando en puerto ${PORT}`));
+
+connectDB(MONGODB_URI);
+
+app.listen(PORT, () => {
+  console.log(`Servidor backend escuchando en puerto ${PORT}`);
+});

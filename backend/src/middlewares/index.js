@@ -1,14 +1,12 @@
 // src/middlewares/index.js
-// Carpeta para middlewares personalizados (autenticación, logging, validación, etc.).
-// Este archivo es un placeholder con documentación para que un profesor entienda
-// dónde colocar middlewares y cómo exportarlos.
+// Middleware personalizado agrupado.
+// Se usa solo un logger sencillo, pero aquí es donde se añadirían
+// autenticación, validación de JWT, etc.
 
-// Ejemplo de middleware de logging simple:
-function requestLogger(req, res, next) {
+export function requestLogger(req, res, next) {
   console.log(`${req.method} ${req.originalUrl}`);
   next();
 }
 
-module.exports = {
-  requestLogger,
-};
+// Si en el futuro queréis exportar más middlewares, agregadlos aquí
+
