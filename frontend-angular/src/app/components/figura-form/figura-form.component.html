@@ -1,16 +1,21 @@
-<form [formGroup]="figuraForm" (ngSubmit)="onSubmit()" class="p-3 border rounded bg-light">
+<form [formGroup]="formulario" (ngSubmit)="onSubmit()" class="p-3 border rounded bg-light">
+  <h3 class="mb-4">{{ titulo }}</h3>
   <div class="mb-3">
     <label for="nombre" class="form-label">Nombre *</label>
-    <input id="nombre" type="text" class="form-control" formControlName="nombre" required>
-    <div *ngIf="figuraForm.get('nombre')?.invalid && figuraForm.get('nombre')?.touched" class="text-danger small">
-      El nombre es obligatorio.
+    <input id="nombre" type="text" class="form-control" formControlName="nombre" required
+      [ngClass]="{'is-invalid': formulario.get('nombre')?.touched && formulario.get('nombre')?.invalid}">
+    <div *ngIf="formulario.get('nombre')?.touched && formulario.get('nombre')?.invalid" class="invalid-feedback">
+      <div *ngIf="formulario.get('nombre')?.errors?.['required']">El nombre es obligatorio.</div>
+      <div *ngIf="formulario.get('nombre')?.errors?.['minlength']">Mínimo 3 caracteres.</div>
     </div>
   </div>
   <div class="mb-3">
     <label for="anime" class="form-label">Anime *</label>
-    <input id="anime" type="text" class="form-control" formControlName="anime" required>
-    <div *ngIf="figuraForm.get('anime')?.invalid && figuraForm.get('anime')?.touched" class="text-danger small">
-      El anime es obligatorio.
+    <input id="anime" type="text" class="form-control" formControlName="anime" required
+      [ngClass]="{'is-invalid': formulario.get('anime')?.touched && formulario.get('anime')?.invalid}">
+    <div *ngIf="formulario.get('anime')?.touched && formulario.get('anime')?.invalid" class="invalid-feedback">
+      <div *ngIf="formulario.get('anime')?.errors?.['required']">El anime es obligatorio.</div>
+      <div *ngIf="formulario.get('anime')?.errors?.['minlength']">Mínimo 3 caracteres.</div>
     </div>
   </div>
   <div class="mb-3">
@@ -19,16 +24,18 @@
   </div>
   <div class="mb-3">
     <label for="precio" class="form-label">Precio</label>
-    <input id="precio" type="number" class="form-control" formControlName="precio" min="0">
-    <div *ngIf="figuraForm.get('precio')?.invalid && figuraForm.get('precio')?.touched" class="text-danger small">
-      El precio debe ser mayor o igual a 0.
+    <input id="precio" type="number" class="form-control" formControlName="precio" min="0"
+      [ngClass]="{'is-invalid': formulario.get('precio')?.touched && formulario.get('precio')?.invalid}">
+    <div *ngIf="formulario.get('precio')?.touched && formulario.get('precio')?.invalid" class="invalid-feedback">
+      <div *ngIf="formulario.get('precio')?.errors?.['min']">El precio debe ser mayor o igual a 0.</div>
     </div>
   </div>
   <div class="mb-3">
     <label for="stock" class="form-label">Stock</label>
-    <input id="stock" type="number" class="form-control" formControlName="stock" min="0">
-    <div *ngIf="figuraForm.get('stock')?.invalid && figuraForm.get('stock')?.touched" class="text-danger small">
-      El stock debe ser mayor o igual a 0.
+    <input id="stock" type="number" class="form-control" formControlName="stock" min="0"
+      [ngClass]="{'is-invalid': formulario.get('stock')?.touched && formulario.get('stock')?.invalid}">
+    <div *ngIf="formulario.get('stock')?.touched && formulario.get('stock')?.invalid" class="invalid-feedback">
+      <div *ngIf="formulario.get('stock')?.errors?.['min']">El stock debe ser mayor o igual a 0.</div>
     </div>
   </div>
   <div class="mb-3">
@@ -39,6 +46,12 @@
     <label for="malId" class="form-label">malId (opcional)</label>
     <input id="malId" type="number" class="form-control" formControlName="malId">
   </div>
-  <button type="submit" class="btn btn-primary" [disabled]="figuraForm.invalid || loading">Guardar</button>
+  <div class="d-flex gap-2">
+    <button type="submit" class="btn btn-primary" [disabled]="formulario.invalid || loading">
+      <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
+      Guardar
+    </button>
+    <button type="button" class="btn btn-secondary" (click)="onCancelar()" [disabled]="loading">Cancelar</button>
+  </div>
   <div *ngIf="error" class="alert alert-danger mt-2">{{ error }}</div>
 </form>

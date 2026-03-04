@@ -11,7 +11,30 @@ const app = express();
 
 // Middlewares generales
 app.use(express.json());          // parsea JSON en el cuerpo de las solicitudes
-app.use(cors());                  // habilita CORS para permitir peticiones desde el frontend
+// Configuración CORS con whitelist
+const whitelist = [
+  'http://localhost:4200',
+  // TODO: reemplaza este dominio por el de tu frontend en producción
+  'https://coleccion-anime.vercel.app/api/v1/figuras/get/all'
+];
+
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true); // Permite requests sin origin (como Postman)
+    if (whitelist.some(entry => typeof entry === 'string' ? entry === origin : entry.test(origin))) {
+      callback(null, true);
+    } else {
+      callback(new Error('No permitido por CORS'));
+    }
+  },
+  methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
+};
+app.use(cors(corsOptions));
+
+// Manejo explícito de preflight OPTIONS para todas las rutas
+app.options('*', cors(corsOptions));
 app.use(requestLogger);           // registra cada petición en la consola
 
 // Versionado de API y ruta principal para figuras

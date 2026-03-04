@@ -8,44 +8,26 @@ import { ReactiveFormsModule } from '@angular/forms';   // Para formularios reac
 import { FormsModule } from '@angular/forms';           // Para two-way binding
 import { AppRoutingModule } from './app-routing.module'; // Para el routing
 
-import { FiguraListComponent } from './components/figura-list/figura-list.component';
-import { FiguraFormComponent } from './components/figura-form/figura-form.component';
-import { JikanSearchComponent } from './components/jikan-search/jikan-search.component';
 import { AppComponent } from './app.component';
 import { FiguraListComponent } from './components/figura-list/figura-list.component';
 import { FiguraFormComponent } from './components/figura-form/figura-form.component';
-import { JikanSearchComponent } from './components/jikan-search/jikan-search.component';
 import { FiguraDetailComponent } from './components/figura-detail/figura-detail.component';
 
 @NgModule({
-  // Declaraciones: componentes que pertenecen a este módulo
-    AppComponent,
-    FiguraListComponent,
-    FiguraFormComponent,
-    JikanSearchComponent
-  ],
   declarations: [
     AppComponent,
     FiguraListComponent,
     FiguraFormComponent,
-    JikanSearchComponent,
     FiguraDetailComponent
   ],
-
-  // Importaciones: módulos externos que se necesitan
   imports: [
-    BrowserModule,           // Módulo básico de Angular para navegador
-    HttpClientModule,        // Necesario para HttpClient (peticiones HTTP)
-    ReactiveFormsModule,     // Para formularios reactivos (FormBuilder, FormGroup)
-    FormsModule,             // Para ngModel y two-way binding
-    AppRoutingModule
+    BrowserModule,
+    AppRoutingModule,
+    HttpClientModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
-
-  // Proveedores: servicios disponibles en toda la aplicación
-  // HttpClientModule ya proporciona HttpClient
   providers: [],
-
-  // Bootstrap: componente raíz que se carga en index.html
   bootstrap: [AppComponent]
 })
 export class AppModule { }

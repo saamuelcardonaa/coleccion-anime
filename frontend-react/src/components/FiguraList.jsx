@@ -132,9 +132,9 @@ export default function FiguraList() {
                   <tr key={figura._id}>
                     {/* Columna: Imagen */}
                     <td>
-                      {figura.imagen ? (
+                      {figura?.imagen ? (
                         <img 
-                          src={figura.imagen} 
+                          src={figura?.imagen} 
                           alt={figura.nombre}
                           className="tabla-imagen"
                           onError={(e) => e.target.style.display = 'none'}

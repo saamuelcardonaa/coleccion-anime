@@ -11,6 +11,8 @@ export class FiguraDetailComponent implements OnInit {
   figura: Figura | null = null;
   loading = false;
   error: string | null = null;
+  showModal = false;
+  loadingDelete = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -45,5 +47,21 @@ export class FiguraDetailComponent implements OnInit {
     if (this.figura && this.figura._id) {
       this.router.navigate(['/figuras/editar', this.figura._id]);
     }
+  }
+
+  confirmarEliminar() {
+    if (!this.figura || !this.figura._id) return;
+    if (!confirm(`¿Eliminar "${this.figura.nombre}"?`)) return;
+    this.loadingDelete = true;
+    this.figuraService.delete(this.figura._id).subscribe({
+      next: () => {
+        this.loadingDelete = false;
+        this.router.navigate(['/figuras'], { queryParams: { msg: 'Figura eliminada correctamente.' } });
+      },
+      error: () => {
+        this.error = 'Error al eliminar la figura.';
+        this.loadingDelete = false;
+      }
+    });
   }
 }

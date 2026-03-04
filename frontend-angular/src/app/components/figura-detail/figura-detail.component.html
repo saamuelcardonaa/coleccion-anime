@@ -5,28 +5,50 @@
   </div>
   <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
 
-  <div *ngIf="figura" class="card shadow">
-    <div class="card-header d-flex justify-content-between align-items-center">
-      <h4 class="mb-0">Detalle de Figura</h4>
-      <span class="badge bg-secondary">ID: {{ figura._id }}</span>
-    </div>
-    <div class="card-body">
-      <h5 class="card-title">{{ figura.nombre }}</h5>
-      <p class="card-text"><b>Anime:</b> {{ figura.anime }}</p>
-      <p class="card-text"><b>Personaje:</b> {{ figura.personaje || '-' }}</p>
-      <p class="card-text"><b>Precio:</b> {{ figura.precio | currency:'EUR':'symbol':'1.0-2' }}</p>
-      <p class="card-text"><b>Stock:</b> {{ figura.stock }}</p>
-      <div *ngIf="figura.imagen && figura.imagen.startsWith('http')" class="mb-2">
-        <img [src]="figura.imagen" [alt]="figura.nombre" class="img-fluid rounded" style="max-height: 200px; object-fit: cover;">
+  <ng-container *ngIf="figura as f">
+    <div class="card shadow">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h4 class="mb-0">Detalle de Figura</h4>
+        <span class="badge bg-secondary">ID: {{ f._id }}</span>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-8">
+            <table class="table table-borderless mb-0">
+              <tbody>
+                <tr><th>Nombre</th><td>{{ f.nombre }}</td></tr>
+                <tr><th>Anime</th><td>{{ f.anime }}</td></tr>
+                <tr><th>Personaje</th><td>{{ f.personaje || '-' }}</td></tr>
+                <tr><th>Precio</th><td>{{ f.precio | currency:'EUR':'symbol':'1.0-2' }}</td></tr>
+                <tr><th>Stock</th><td>{{ f.stock }}</td></tr>
+                <tr><th>malId</th><td>{{ f.malId || '-' }}</td></tr>
+                <tr *ngIf="f.imagen">
+                  <th>Imagen</th>
+                  <td>
+                    <ng-container *ngIf="f.imagen.startsWith('http'); else textoImagen">
+                      <img [src]="f.imagen" [alt]="f.nombre" class="img-fluid rounded" style="max-height: 200px; object-fit: cover;">
+                    </ng-container>
+                    <ng-template #textoImagen>{{ f.imagen }}</ng-template>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer d-flex gap-2 justify-content-end">
+        <button class="btn btn-secondary" (click)="volver()">
+          <i class="bi bi-arrow-left"></i> Volver
+        </button>
+        <button class="btn btn-primary" (click)="editar()">
+          <i class="bi bi-pencil"></i> Editar
+        </button>
+        <button class="btn btn-danger" (click)="confirmarEliminar()" [disabled]="loadingDelete">
+          <span *ngIf="loadingDelete" class="spinner-border spinner-border-sm me-1"></span>
+          <i class="bi bi-trash"></i> Eliminar
+        </button>
       </div>
     </div>
-    <div class="card-footer d-flex justify-content-between">
-      <button class="btn btn-secondary" (click)="volver()">
-        <i class="bi bi-arrow-left"></i> Volver
-      </button>
-      <button class="btn btn-primary" (click)="editar()">
-        <i class="bi bi-pencil"></i> Editar
-      </button>
-    </div>
-  </div>
+  </ng-container>
+<ng-template #textoImagen>{{ figura?.imagen }}</ng-template>
 </div>

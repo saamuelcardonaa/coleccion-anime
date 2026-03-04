@@ -99,7 +99,7 @@ export class FiguraFormComponent implements OnInit {
         personaje: this.figura.personaje || '',
         precio: this.figura.precio || 0,
         stock: this.figura.stock || 0,
-        imagen: this.figura.imagen || '',
+        imagen: this.figura?.imagen || '',
         malId: this.figura.malId || ''
       });
     }
@@ -131,7 +131,7 @@ export class FiguraFormComponent implements OnInit {
         next: () => {
           this.success = true;
           this.loading = false;
-          this.router.navigate(['/figuras']);
+          this.router.navigate(['/figuras'], { queryParams: { msg: 'Figura actualizada correctamente.' } });
         },
         error: (err) => {
           this.error = 'Error al actualizar la figura.';
@@ -144,7 +144,7 @@ export class FiguraFormComponent implements OnInit {
         next: () => {
           this.success = true;
           this.loading = false;
-          this.router.navigate(['/figuras']);
+          this.router.navigate(['/figuras'], { queryParams: { msg: 'Figura creada correctamente.' } });
         },
         error: (err) => {
           this.error = 'Error al crear la figura.';
@@ -161,5 +161,9 @@ export class FiguraFormComponent implements OnInit {
    */
   onCancelar(): void {
     this.router.navigate(['/figuras']);
+  }
+
+  get titulo(): string {
+    return this.id ? 'Editar figura' : 'Nueva figura';
   }
 }
