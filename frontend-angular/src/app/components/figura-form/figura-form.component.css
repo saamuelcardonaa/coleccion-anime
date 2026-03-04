@@ -1,0 +1,7 @@
+/* src/app/components/figura-form/figura-form.component.css */
+/* Estilos mínimos para el formulario (Bootstrap hace la mayor parte) */
+
+.invalid-feedback {
+  color: #dc3545;
+  font-size: 0.875em;
+}

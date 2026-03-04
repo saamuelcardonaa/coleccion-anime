@@ -1,0 +1,22 @@
+<!-- src/app/app.component.html -->
+<!-- Template principal de la aplicación Angular -->
+
+<!-- Barra de navegación (navbar) con Bootstrap -->
+<nav class="navbar navbar-dark bg-dark">
+  <div class="container-fluid">
+    <span class="navbar-brand mb-0 h1">
+      🎌 {{ title }}
+    </span>
+  </div>
+</nav>
+
+<!-- Contenedor principal: aquí se renderiza el componente figura-list -->
+<!-- Este componente se encarga de toda la lógica CRUD -->
+<app-figura-list></app-figura-list>
+
+<!-- Footer simple -->
+<footer class="bg-dark text-light text-center py-3 mt-5">
+  <p class="mb-0">
+    Desarrollado con <strong>Angular + Express + MongoDB</strong>
+  </p>
+</footer>

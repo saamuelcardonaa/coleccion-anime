@@ -1,0 +1,10 @@
+/* src/app/app.component.css */
+/* Estilos globales mínimos (Bootstrap maneja la mayoría) */
+
+body {
+  background-color: #f5f5f5;
+}
+
+footer {
+  margin-top: auto;
+}

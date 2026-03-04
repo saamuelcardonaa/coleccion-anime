@@ -1,0 +1,134 @@
+<!-- src/app/components/figura-form/figura-form.component.html -->
+<!-- Formulario reactivo para crear/editar figuras usando Bootstrap 5 -->
+
+<form [formGroup]="formulario" (ngSubmit)="onSubmit()">
+  <!-- Fila 1: Nombre y Anime (campos requeridos) -->
+  <div class="row mb-3">
+    <!-- Campo Nombre -->
+    <div class="col-md-6">
+      <label for="nombre" class="form-label">
+        Nombre <span class="text-danger">*</span>
+      </label>
+      <input
+        type="text"
+        class="form-control"
+        id="nombre"
+        formControlName="nombre"
+        placeholder="Ej: Saitama Statue"
+        [class.is-invalid]="formulario.get('nombre')?.invalid && formulario.get('nombre')?.touched">
+      <!-- Mostrar mensajes de error -->
+      <div class="invalid-feedback d-block" *ngIf="formulario.get('nombre')?.hasError('required')">
+        El nombre es requerido.
+      </div>
+      <div class="invalid-feedback d-block" *ngIf="formulario.get('nombre')?.hasError('minlength')">
+        El nombre debe tener al menos 3 caracteres.
+      </div>
+    </div>
+
+    <!-- Campo Anime -->
+    <div class="col-md-6">
+      <label for="anime" class="form-label">
+        Anime <span class="text-danger">*</span>
+      </label>
+      <input
+        type="text"
+        class="form-control"
+        id="anime"
+        formControlName="anime"
+        placeholder="Ej: One Punch Man"
+        [class.is-invalid]="formulario.get('anime')?.invalid && formulario.get('anime')?.touched">
+      <!-- Mostrar mensajes de error -->
+      <div class="invalid-feedback d-block" *ngIf="formulario.get('anime')?.hasError('required')">
+        El anime es requerido.
+      </div>
+      <div class="invalid-feedback d-block" *ngIf="formulario.get('anime')?.hasError('minlength')">
+        El anime debe tener al menos 3 caracteres.
+      </div>
+    </div>
+  </div>
+
+  <!-- Fila 2: Personaje y Precio -->
+  <div class="row mb-3">
+    <!-- Campo Personaje -->
+    <div class="col-md-6">
+      <label for="personaje" class="form-label">Personaje</label>
+      <input
+        type="text"
+        class="form-control"
+        id="personaje"
+        formControlName="personaje"
+        placeholder="Ej: Saitama">
+    </div>
+
+    <!-- Campo Precio -->
+    <div class="col-md-6">
+      <label for="precio" class="form-label">Precio ($)</label>
+      <input
+        type="number"
+        class="form-control"
+        id="precio"
+        formControlName="precio"
+        placeholder="0.00"
+        step="0.01"
+        min="0"
+        [class.is-invalid]="formulario.get('precio')?.invalid && formulario.get('precio')?.touched">
+      <div class="invalid-feedback d-block" *ngIf="formulario.get('precio')?.hasError('min')">
+        El precio no puede ser negativo.
+      </div>
+    </div>
+  </div>
+
+  <!-- Fila 3: Stock e Imagen -->
+  <div class="row mb-3">
+    <!-- Campo Stock -->
+    <div class="col-md-6">
+      <label for="stock" class="form-label">Stock (Cantidad)</label>
+      <input
+        type="number"
+        class="form-control"
+        id="stock"
+        formControlName="stock"
+        placeholder="0"
+        min="0"
+        [class.is-invalid]="formulario.get('stock')?.invalid && formulario.get('stock')?.touched">
+      <div class="invalid-feedback d-block" *ngIf="formulario.get('stock')?.hasError('min')">
+        El stock no puede ser negativo.
+      </div>
+    </div>
+
+    <!-- Campo Imagen (URL) -->
+    <div class="col-md-6">
+      <label for="imagen" class="form-label">URL de Imagen</label>
+      <input
+        type="url"
+        class="form-control"
+        id="imagen"
+        formControlName="imagen"
+        placeholder="https://ejemplo.com/imagen.jpg">
+    </div>
+  </div>
+
+  <!-- Botones de acción: Guardar y Cancelar -->
+  <div class="d-flex gap-2">
+    <!-- Botón Guardar: enviará el formulario si es válido -->
+    <button
+      type="submit"
+      class="btn btn-success"
+      [disabled]="formulario.invalid">
+      💾 Guardar
+    </button>
+
+    <!-- Botón Cancelar: emite evento de cancelación sin guardar -->
+    <button
+      type="button"
+      class="btn btn-secondary"
+      (click)="onCancelar()">
+      ❌ Cancelar
+    </button>
+  </div>
+
+  <!-- Nota sobre campos requeridos -->
+  <small class="d-block mt-3 text-muted">
+    <span class="text-danger">*</span> Campo requerido
+  </small>
+</form>

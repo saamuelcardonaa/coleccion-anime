@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<!-- src/index.html -->
+<!-- Archivo HTML base que carga la aplicación Angular -->
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Colección Anime - Angular</title>
+  
+  <!-- Bootstrap 5 CSS desde CDN -->
+  <!-- Bootstrap proporciona estilos para toda la interfaz (tabla, botones, formularios, etc.) -->
+  <link 
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" 
+    rel="stylesheet">
+  
+  <style>
+    /* Estilos globales mínimos */
+    body {
+      background-color: #f8f9fa;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+    }
+    
+    html, body {
+      height: 100%;
+    }
+    
+    #root {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    
+    app-root {
+      flex: 1;
+    }
+  </style>
+</head>
+<body>
+  <!-- Contenedor donde Angular renderizará la aplicación -->
+  <!-- El componente AppComponent se cargará dentro de este elemento -->
+  <app-root></app-root>
+
+  <!-- Bootstrap 5 JavaScript desde CDN (necesario para componentes como modales, dropdowns, etc.) -->
+  <script 
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js">
+  </script>
+</body>
+</html>

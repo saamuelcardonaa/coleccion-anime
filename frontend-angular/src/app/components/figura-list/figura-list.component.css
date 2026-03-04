@@ -1,0 +1,15 @@
+/* src/app/components/figura-list/figura-list.component.css */
+/* Estilos mínimos para la lista (Bootstrap hace la mayor parte) */
+
+.table-secondary {
+  opacity: 0.6;
+}
+
+.img-thumbnail {
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.img-thumbnail:hover {
+  transform: scale(1.5);
+}
