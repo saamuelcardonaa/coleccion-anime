@@ -5,10 +5,14 @@ import { FiguraFormComponent } from './components/figura-form/figura-form.compon
 import { JikanSearchComponent } from './components/jikan-search/jikan-search.component';
 
 const routes: Routes = [
-  { path: '', component: FiguraListComponent },
-  { path: 'crear', component: FiguraFormComponent },
-  { path: 'jikan', component: JikanSearchComponent },
-  { path: '**', redirectTo: '' }
+  { path: '', redirectTo: 'figuras', pathMatch: 'full' },
+
+  { path: 'figuras', component: FiguraListComponent },
+  { path: 'figuras/nueva', component: FiguraFormComponent },
+  { path: 'figuras/editar/:id', component: FiguraFormComponent },
+  // { path: 'figuras/:id', component: FiguraDetailComponent }, // Componente no implementado
+
+  { path: '**', redirectTo: 'figuras' }
 ];
 
 @NgModule({

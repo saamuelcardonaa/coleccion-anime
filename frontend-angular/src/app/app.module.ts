@@ -27,7 +27,7 @@ import { JikanSearchComponent } from './components/jikan-search/jikan-search.com
     BrowserModule,           // Módulo básico de Angular para navegador
     HttpClientModule,        // Necesario para HttpClient (peticiones HTTP)
     ReactiveFormsModule,     // Para formularios reactivos (FormBuilder, FormGroup)
-    FormsModule              // Para ngModel y two-way binding
+    FormsModule,             // Para ngModel y two-way binding
     AppRoutingModule
   ],
 
