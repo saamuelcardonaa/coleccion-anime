@@ -1,28 +1,33 @@
-import React, { useEffect, useState } from 'react'
-import axios from 'axios'
-import FigureList from './components/FigureList'
+// src/App.jsx
+// Componente raíz de la aplicación React
+// Configura React Router para navegar entre páginas
 
-// Componente principal del cliente React.
-// Se encarga de consumir la API del backend y pasar los datos a los componentes.
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Navbar from './components/Navbar';
+import FiguraList from './components/FiguraList';
+import FiguraForm from './components/FiguraForm';
+import FiguraEdit from './components/FiguraEdit';
+import './App.css';
+
 export default function App() {
-  const [figures, setFigures] = useState([])
-
-  useEffect(() => {
-    const fetchFigures = async () => {
-      try {
-        const res = await axios.get('/api/figures')
-        setFigures(res.data)
-      } catch (err) {
-        console.error('Error fetching figures', err)
-      }
-    }
-    fetchFigures()
-  }, [])
-
   return (
-    <div style={{ padding: 20 }}>
-      <h1>Colección de Figuras</h1>
-      <FigureList figures={figures} />
-    </div>
-  )
+    // Router: envoltorio que habilita React Router en toda la app
+    <Router>
+      {/* Navbar: barra de navegación visible en todas las páginas */}
+      <Navbar />
+
+      {/* Routes: contenedor de rutas */}
+      <Routes>
+        {/* Ruta 1: Página principal - Listado de figuras */}
+        <Route path="/" element={<FiguraList />} />
+
+        {/* Ruta 2: Crear nueva figura */}
+        <Route path="/crear" element={<FiguraForm />} />
+
+        {/* Ruta 3: Editar figura existente (con ID dinámico) */}
+        <Route path="/editar/:id" element={<FiguraEdit />} />
+      </Routes>
+    </Router>
+  );
 }
