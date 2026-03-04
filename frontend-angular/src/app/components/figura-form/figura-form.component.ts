@@ -3,7 +3,8 @@
 // Recibe una figura como input y emite eventos de guardar o cancelar.
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Figura } from '../../services/figura.service';
+import { Router } from '@angular/router';
+import { FiguraService } from '../../services/figura.service';
 
 @Component({
   selector: 'app-figura-form',
@@ -25,7 +26,7 @@ export class FiguraFormComponent implements OnInit {
   formulario!: FormGroup;
 
   // Constructor: inyectamos FormBuilder para crear el formulario reactivo
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder, private figuraService: FiguraService, private router: Router) {}
 
   /**
    * ngOnInit()
@@ -64,7 +65,8 @@ export class FiguraFormComponent implements OnInit {
       stock: [0, [Validators.min(0)]],
 
       // Campo imagen: opcional (URL)
-      imagen: ['']
+      imagen: [''],
+      malId: ['']
     });
   }
 
@@ -124,6 +126,9 @@ export class FiguraFormComponent implements OnInit {
 
     // Emitir evento al componente padre con la figura a guardar
     this.guardar.emit(novaFigura);
+
+    // Redirigir a '/'
+    this.router.navigate(['/']);
   }
 
   /**

@@ -1,121 +1,40 @@
 <!-- src/app/components/figura-list/figura-list.component.html -->
 <!-- Template para mostrar lista de figuras en una tabla Bootstrap con opciones CRUD -->
 
-<div class="container mt-5">
-  <!-- Encabezado y botón para crear nueva figura -->
-  <div class="row mb-4">
-    <div class="col-md-8">
-      <h1>Colección de Figuras de Anime</h1>
-    </div>
-    <div class="col-md-4 text-end">
-      <!-- Botón para abriri el formulario de creación -->
-      <button 
-        class="btn btn-primary"
-        (click)="abrirFormulario()"
-        [disabled]="mostrarFormulario">
-        ➕ Nueva Figura
-      </button>
-    </div>
-  </div>
+<div class="container mt-4">
+  <h2 class="mb-4">Colección de Figuras de Anime</h2>
 
-  <!-- Mostrar mensaje de error si existe -->
-  <div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
-    {{ error }}
-    <button type="button" class="btn-close" (click)="error = null"></button>
-  </div>
+  <!-- Mensaje de error -->
+  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
 
-  <!-- Mostrar spinner mientras se cargan las figuras -->
-  <div *ngIf="cargando" class="text-center my-5">
+  <!-- Loading -->
+  <div *ngIf="loading" class="text-center my-5">
     <div class="spinner-border" role="status">
       <span class="visually-hidden">Cargando...</span>
     </div>
   </div>
 
-  <!-- Componente del formulario (se muestra solo si mostrarFormulario es true) -->
-  <div *ngIf="mostrarFormulario" class="card mb-4 border-primary">
-    <div class="card-header bg-primary text-white">
-      {{ figuraEdicion ? 'Editar Figura' : 'Crear Nueva Figura' }}
-    </div>
-    <div class="card-body">
-      <!-- El componente figura-form maneja el formulario -->
-      <!-- Se pasa: figura actual (si es edición), evento al guardar, evento al cancelar -->
-      <app-figura-form
-        [figura]="figuraEdicion"
-        (guardar)="guardarFigura($event)"
-        (cancelar)="cerrarFormulario()">
-      </app-figura-form>
+  <!-- Lista de figuras -->
+  <div class="row g-3" *ngIf="!loading && figuras.length">
+    <div class="col-md-4" *ngFor="let figura of figuras">
+      <div class="card h-100">
+        <div class="card-body">
+          <h5 class="card-title">{{ figura.nombre }}</h5>
+          <p class="card-text mb-1"><b>Anime:</b> {{ figura.anime }}</p>
+          <p class="card-text mb-1"><b>Personaje:</b> {{ figura.personaje || '-' }}</p>
+          <p class="card-text mb-1"><b>Precio:</b> {{ figura.precio }}€</p>
+          <p class="card-text mb-2"><b>Stock:</b> {{ figura.stock }}</p>
+          <div *ngIf="figura.imagen && figura.imagen.startsWith('http')" class="mb-2">
+            <img [src]="figura.imagen" [alt]="figura.nombre" class="img-fluid rounded" style="max-height: 160px; object-fit: cover;">
+          </div>
+          <button class="btn btn-danger btn-sm" (click)="eliminarFigura(figura._id)">Eliminar</button>
+        </div>
+      </div>
     </div>
   </div>
 
-  <!-- Tabla de figuras (solo se muestra si hay figuras y no se está cargando) -->
-  <div *ngIf="!cargando && figuras.length > 0" class="table-responsive">
-    <table class="table table-striped table-hover">
-      <thead class="table-dark">
-        <tr>
-          <th>Nombre</th>
-          <th>Anime</th>
-          <th>Personaje</th>
-          <th>Precio</th>
-          <th>Stock</th>
-          <th>Imagen</th>
-          <th class="text-center">Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        <!-- Recorrer array de figuras y mostrar una fila por cada una -->
-        <tr *ngFor="let figura of figuras" [class.table-secondary]="mostrarFormulario">
-          <!-- Nombre da la figura (enlace a la imagen si existe) -->
-          <td>
-            <strong>{{ figura.nombre }}</strong>
-          </td>
-          <!-- Anime -->
-          <td>{{ figura.anime }}</td>
-          <!-- Personaje (mostrar "-" si no hay) -->
-          <td>{{ figura.personaje || '-' }}</td>
-          <!-- Precio en formato moneda -->
-          <td>{{ figura.precio ? ('$' + figura.precio) : '-' }}</td>
-          <!-- Stock -->
-          <td>
-            <span class="badge" [class.bg-success]="figura.stock! > 0" [class.bg-danger]="figura.stock! === 0">
-              {{ figura.stock || 0 }}
-            </span>
-          </td>
-          <!-- Imagen: miniatura si existe, sino mensaje -->
-          <td>
-            <img 
-              *ngIf="figura.imagen"
-              [src]="figura.imagen"
-              alt="{{ figura.nombre }}"
-              class="img-thumbnail"
-              style="width: 50px; height: 50px; object-fit: cover;">
-            <span *ngIf="!figura.imagen" class="text-muted">-</span>
-          </td>
-          <!-- Botones para editar y eliminar -->
-          <td class="text-center">
-            <!-- Botón Editar: abre el formulario con los datos de la figura -->
-            <button
-              class="btn btn-sm btn-warning me-2"
-              (click)="editarFigura(figura)"
-              [disabled]="mostrarFormulario"
-              title="Editar figura">
-              ✏️ Editar
-            </button>
-            <!-- Botón Eliminar: solicita confirmación y elimina -->
-            <button
-              class="btn btn-sm btn-danger"
-              (click)="eliminarFigura(figura)"
-              [disabled]="mostrarFormulario"
-              title="Eliminar figura">
-              🗑️ Eliminar
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <!-- Mensaje cuando no hay figuras -->
-  <div *ngIf="!cargando && figuras.length === 0" class="alert alert-info">
-    <strong>No hay figuras en la colección.</strong> ¡Crea una nueva haciendo clic en "Nueva Figura"!
+  <!-- Sin figuras -->
+  <div *ngIf="!loading && !figuras.length" class="alert alert-info">
+    No hay figuras en la colección.
   </div>
 </div>

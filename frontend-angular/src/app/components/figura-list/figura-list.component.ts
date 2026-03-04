@@ -20,7 +20,7 @@ export class FiguraListComponent implements OnInit {
   figuraEdicion: Figura | null = null;
 
   // Variable para mostrar mensajes de carga
-  cargando = false;
+  loading = false;
 
   // Variable para mostrar mensajes de error
   error: string | null = null;
@@ -49,19 +49,16 @@ export class FiguraListComponent implements OnInit {
    * 5. Limpia errores previos
    */
   cargarFiguras(): void {
-    this.cargando = true;
-    this.figuraService.obtenerFiguras().subscribe({
-      next: (response) => {
-        // response.data contiene el array de figuras del backend
-        this.figuras = response.data || [];
-        this.error = null;
-        this.cargando = false;
+    this.loading = true;
+    this.error = null;
+    this.figuraService.getAll().subscribe({
+      next: (figuras) => {
+        this.figuras = figuras;
+        this.loading = false;
       },
-      error: (err) => {
-        // Si hay error de conexión o en el backend
-        this.error = 'Error al cargar las figuras. Verifica que el backend esté corriendo.';
-        console.error('Error en cargarFiguras:', err);
-        this.cargando = false;
+      error: (err: any) => {
+        this.error = 'Error al cargar las figuras.';
+        this.loading = false;
       }
     });
   }
@@ -128,18 +125,19 @@ export class FiguraListComponent implements OnInit {
    * 
    * @param figura - La figura a eliminar
    */
-  eliminarFigura(figura: Figura): void {
-    if (figura._id && confirm('¿Estás seguro de que deseas eliminar esta figura?')) {
-      this.figuraService.eliminarFigura(figura._id).subscribe({
-        next: () => {
-          this.cargarFiguras(); // Recargar la lista
-          alert('Figura eliminada exitosamente');
-        },
-        error: (err) => {
-          alert('Error al eliminar la figura: ' + err.error.message);
-        }
-      });
-    }
+  eliminarFigura(id: string | undefined): void {
+    if (!id) return;
+    if (!confirm('¿Seguro que quieres eliminar esta figura?')) return;
+    this.loading = true;
+    this.figuraService.delete(id).subscribe({
+      next: () => {
+        this.cargarFiguras();
+      },
+      error: (err: any) => {
+        this.error = 'Error al eliminar la figura.';
+        this.loading = false;
+      }
+    });
   }
 
   /**

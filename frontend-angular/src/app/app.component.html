@@ -10,6 +10,29 @@
   </div>
 </nav>
 
+<!-- Barra de navegación secundaria (navbar) con Bootstrap -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Colección Anime</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Listado</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/crear" routerLinkActive="active">Crear</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/jikan" routerLinkActive="active">Buscar (Jikan)</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
 <!-- Contenedor principal: aquí se renderiza el componente figura-list -->
 <!-- Este componente se encarga de toda la lógica CRUD -->
 <app-figura-list></app-figura-list>
