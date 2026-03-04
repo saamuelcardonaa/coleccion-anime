@@ -1,182 +1,246 @@
-# Colección Anime — Proyecto Fullstack
+📦 Colección Anime — Proyecto Fullstack (MEAN + Angular + React)
+📖 Descripción del proyecto
 
-Este repositorio contiene una aplicación fullstack completa para gestionar una colección de figuras de anime.
+Colección Anime es una aplicación full-stack desarrollada como proyecto integrador utilizando una arquitectura tipo MEAN (MongoDB, Express, Angular, Node) y un cliente adicional en React.
 
-## 📁 Estructura principal del proyecto
+El sistema permite gestionar una colección de figuras de anime mediante una API REST que ofrece operaciones CRUD completas (crear, consultar, actualizar y eliminar).
 
-- **`backend`**: Servidor Node.js + Express
-  - API REST con operaciones CRUD para figuras
-  - Conectado a MongoDB con Mongoose
-  - Incluye ejemplo de integración con API pública (Jikan)
-  - Modelos, controladores y rutas bien organizadas
+La aplicación se compone de:
 
-- **`frontend-angular`**: Aplicación cliente con Angular ✨ NUEVA
-  - Interfaz completa con Bootstrap 5
-  - Servicio HTTP para consumir el backend
-  - Componentes para listar, crear, editar y eliminar figuras
-  - Validación de formularios reactivos
-  - Código ampliamente comentado
+Backend → Node.js + Express + MongoDB
 
-- **`frontend-react`**: Cliente React minimal (referencia)
-  - Componentes simples que consumen la API
-  - Ejemplo de integración React-Backend
+Frontend Angular → Cliente principal
 
-## 🚀 Inicio rápido
+Frontend React → Cliente alternativo que consume la misma API
 
-### Prerequisitos
-- Node.js v16+ y npm
-- MongoDB corriendo localmente o en la nube
-- Angular CLI (para frontend-angular): `npm install -g @angular/cli`
+Además, el backend integra una API externa (Jikan / MyAnimeList) para obtener información sobre animes.
 
-### Paso 1: Backend (Express + MongoDB)
+🎯 Problema que resuelve
 
-```bash
-cd backend
-npm install
-cp .env.example .env
-# Editar .env y configurar MONGO_URI si es necesario
-npm run dev
-```
+Muchos coleccionistas de figuras necesitan organizar su colección y mantener control sobre:
 
-El backend estará disponible en `http://localhost:5000`
+qué figuras poseen
 
-### Paso 2: Frontend Angular
+el precio de cada figura
 
-En otra terminal:
+el stock disponible
 
-```bash
-cd frontend-angular
-npm install
-npm start
-```
+el anime y personaje asociado
 
-La aplicación se abrirá en `http://localhost:4200`
+Este sistema permite:
 
-### Paso 3 (Opcional): Frontend React
+registrar nuevas figuras
 
-```bash
-cd frontend-react
-npm install
-npm run dev
-```
+consultar el catálogo completo
 
-## 📚 Documentación
+editar información
 
-Cada carpeta incluye su propio `README.md`:
-- [backend/README.md](backend/README.md) - Explicación de estructura backend
-- [backend/EJEMPLOS_API.md](backend/EJEMPLOS_API.md) - Ejemplos de peticiones HTTP
-- [frontend-angular/README.md](frontend-angular/README.md) - Guía completa Angular
-- [frontend-react/README.md](frontend-react/README.md) - Guía React
+eliminar figuras
 
-## 🎯 Características principales
+consultar información externa de animes mediante API pública
 
-### Backend
-✅ CRUD completo de figuras (GET, POST, PUT, DELETE)
-✅ Validación de datos con Mongoose
-✅ Integración con API externa (Jikan)
-✅ Estructura modular (models, controllers, routes, services)
-✅ Middleware de logging
-✅ Manejo de errores
+🏗 Arquitectura del proyecto
 
-### Frontend Angular
-✅ Listar todas las figuras en tabla
-✅ Crear nuevas figuras con formulario validado
-✅ Editar figuras existentes
-✅ Eliminar figuras con confirmación
-✅ Interfaz responsiva (Bootstrap 5)
-✅ Servicio HTTP reutilizable
-✅ Componentes documentados
+El proyecto sigue una arquitectura modular separando backend y frontend.
 
-## 🏗️ Arquitectura
-
-```
 coleccion-anime/
+│
 ├── backend/
 │   ├── src/
-│   │   ├── models/        (Esquemas Mongoose)
-│   │   ├── controllers/   (Lógica de negocio)
-│   │   ├── routes/        (Rutas HTTP)
-│   │   ├── config/        (Configuración BD)
-│   │   └── middlewares/   (Middlewares personalizados)
-│   ├── server.js          (Punto de entrada)
+│   │   ├── config/        # conexión MongoDB
+│   │   ├── models/        # modelos Mongoose
+│   │   ├── controllers/   # lógica de negocio
+│   │   ├── routes/        # endpoints API
+│   │   └── middlewares/   # middlewares Express
+│   │
+│   ├── server.js          # punto de entrada del servidor
 │   └── package.json
 │
 ├── frontend-angular/
-│   ├── src/
-│   │   ├── app/
-│   │   │   ├── components/
-│   │   │   │   ├── figura-list/
-│   │   │   │   └── figura-form/
-│   │   │   ├── services/  (Figura service)
-│   │   │   └── app.module.ts
-│   │   ├── index.html
-│   │   └── main.ts
+│   ├── src/app/
+│   │   ├── components/    # componentes Angular
+│   │   ├── services/      # servicios HTTP
+│   │   └── app.module.ts
+│   │
 │   └── package.json
 │
-└── frontend-react/
-    └── src/...
-```
+├── frontend-react/
+│   └── src/
+│
+└── README.md
+🗄 Modelo de datos
 
-## 📝 Notas para profesores y estudiantes
+Entidad principal del sistema:
 
-### Backend
-- Cada archivo incluye comentarios explicativos
-- Estructura MVC (Models-Controllers-Routes)
-- Ejemplo de consumo de API externa (Jikan)
-- Validaciones en modelo y controlador
-- Códigos HTTP apropiados en respuestas
+Figura
 
-### Frontend Angular
-- Componentes separados por responsabilidades
-- Servicio HTTP centralizado
-- Formularios reactivos con validación
-- Directivas y data binding explicadas
-- Bootstrap para ahorrar CSS personalizado
-- 100% comentado para educación
+Campos principales:
 
-## 🔧 Configuración
+Campo	Tipo
+_id	ObjectId
+nombre	String
+anime	String
+personaje	String
+precio	Number
+stock	Number
+imagen	String
+malId	Number
+createdAt	Date
+updatedAt	Date
 
-### Backend (.env)
-```
-MONGO_URI=mongodb://localhost:27017/coleccion-anime
-PORT=5000
-```
+La base de datos está poblada con mínimo 20 registros para pruebas del sistema.
 
-### Frontend Angular
-Editar `src/app/services/figura.service.ts` si la API está en otro puerto
+⚙ Backend (Node + Express + MongoDB)
 
-## 📖 Endpoints principales
+La API está desarrollada utilizando:
 
-| Método | Ruta | Descripción |
-|--------|------|-------------|
-| GET | /figuras | Obtener todas las figuras |
-| GET | /figuras/:id | Obtener una figura |
-| POST | /figuras | Crear figura |
-| PUT | /figuras/:id | Actualizar figura |
-| DELETE | /figuras/:id | Eliminar figura |
-| GET | /figuras/jikan/buscar?nombre=X | Buscar en Jikan API |
+Node.js
 
-## 🐛 Troubleshooting
+Express
 
-**Backend no conecta a MongoDB:**
-- Verifica que MongoDB esté corriendo: `mongod`
-- Comprueba MONGO_URI en .env
+MongoDB Atlas
 
-**Frontend Angular: Error CORS:**
-- Asegúrate de que el backend está corriendo en puerto 5000
-- Verifica en consola del navegador (F12) el error exacto
+Mongoose
 
-**Puerto 5000 en uso:**
-- Cambia el puerto en backend/.env y en figura.service.ts
+CORS
 
-## 📚 Recursos
+Incluye:
 
-- [Angular Documentation](https://angular.io/docs)
-- [Express Documentation](https://expressjs.com/)
-- [MongoDB Documentation](https://docs.mongodb.com/)
-- [Bootstrap 5 Documentation](https://getbootstrap.com/docs/5.0/)
-- [Jikan API Documentation](https://jikan.moe/)
+✔ Validaciones de datos
+✔ Manejo de errores
+✔ Status codes HTTP correctos
+✔ Integración con API externa (Jikan)
 
----
+📡 Endpoints de la API
+Método	Endpoint	Descripción
+GET	/api/v1/figuras/get/all	Obtener todas las figuras
+GET	/api/v1/figuras/get/:id	Obtener una figura
+POST	/api/v1/figuras/post	Crear figura
+PATCH	/api/v1/figuras/update/:id	Actualizar figura
+DELETE	/api/v1/figuras/delete/:id	Eliminar figura
+GET	/api/v1/figuras/jikan/buscar?nombre=X	Buscar anime (API Jikan)
+🧠 Reglas de negocio
 
-**Desarrollado con ❤️ para educación en desarrollo fullstack**
+El sistema implementa algunas validaciones básicas:
+
+1️⃣ El nombre de la figura es obligatorio
+2️⃣ El anime es obligatorio
+3️⃣ El precio no puede ser negativo
+4️⃣ El stock no puede ser negativo
+
+Estas reglas se validan tanto en el modelo Mongoose como en el controlador.
+
+🎨 Frontend Angular
+
+El frontend principal está desarrollado en Angular y consume completamente la API REST.
+
+Características implementadas:
+
+✔ Consumo de API mediante servicios HTTP
+✔ Componentes organizados por funcionalidad
+✔ Formularios reactivos
+✔ Validación de campos
+✔ Operaciones CRUD completas
+✔ Uso de Bootstrap para la interfaz
+
+⚛ Frontend React
+
+Se incluye un segundo cliente desarrollado con React que consume la misma API.
+
+Este cliente sirve como ejemplo de:
+
+✔ uso de hooks
+✔ consumo de API mediante fetch
+✔ componentes funcionales
+
+🌐 Deploy del proyecto
+
+Backend desplegado en:
+
+https://coleccion-anime.vercel.app
+
+Ejemplo de endpoint:
+
+https://coleccion-anime.vercel.app/api/v1/figuras/get/all
+🚀 Ejecución local
+Backend
+cd backend
+npm install
+npm run dev
+
+Servidor disponible en:
+
+http://localhost:5000
+Frontend Angular
+cd frontend-angular
+npm install
+npm start
+
+Aplicación disponible en:
+
+http://localhost:4200
+Frontend React
+cd frontend-react
+npm install
+npm run dev
+⚠ Estado actual del proyecto
+
+Este repositorio forma parte de un proyecto académico en desarrollo.
+
+Actualmente se encuentran completamente funcionales:
+
+✔ Backend Node.js + Express
+✔ Base de datos MongoDB
+✔ API REST con CRUD
+✔ Integración con API externa (Jikan)
+✔ Frontend React funcional
+
+El frontend Angular aún se encuentra en fase de desarrollo, por lo que algunas funcionalidades pueden no estar completamente terminadas.
+
+El objetivo del proyecto es completar todas las fases requeridas por la asignatura.
+
+📚 Tecnologías utilizadas
+
+Backend
+
+Node.js
+
+Express
+
+MongoDB
+
+Mongoose
+
+CORS
+
+Frontend
+
+Angular
+
+React
+
+Bootstrap
+
+API externa
+
+Jikan API (MyAnimeList)
+
+👨‍💻 Autor
+
+Proyecto desarrollado como Proyecto Final Integrador para la asignatura de desarrollo web.
+
+🙏 Agradecimientos
+
+Gracias a los recursos de documentación oficiales:
+
+Angular
+
+React
+
+Express
+
+MongoDB
+
+Bootstrap
+
+Jikan API
