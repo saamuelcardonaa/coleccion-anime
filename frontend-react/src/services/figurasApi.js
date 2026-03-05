@@ -1,43 +1,49 @@
-// Servicio mínimo para CRUD de figuras usando fetch
-// API base: import.meta.env.VITE_API_URL
+const API = import.meta.env.VITE_API_URL || "https://coleccion-anime.vercel.app/api/v1";
+const BASE = `${API}/figuras`;
 
-const API_URL = import.meta.env.VITE_API_URL;
-const BASE = `${API_URL}/figuras`;
+async function handleResponse(res, defaultMsg) {
+  if (!res.ok) {
+    let msg = `${defaultMsg} (status ${res.status})`;
+    try {
+      const json = await res.json();
+      if (json && json.message) msg = json.message;
+    } catch {}
+    throw new Error(msg);
+  }
+  const json = await res.json();
+  if (json.success === false) throw new Error(json.message || defaultMsg);
+  return json.data;
+}
 
-export async function getFiguras() {
+export async function getAll() {
   const res = await fetch(`${BASE}/get/all`);
-  if (!res.ok) throw new Error('Error al cargar figuras');
-  return res.json();
+  return handleResponse(res, 'Error al cargar figuras');
 }
 
-export async function getFigura(id) {
+export async function getById(id) {
   const res = await fetch(`${BASE}/get/${id}`);
-  if (!res.ok) throw new Error('Error al cargar figura');
-  return res.json();
+  return handleResponse(res, 'Error al cargar figura');
 }
 
-export async function createFigura(data) {
+export async function create(payload) {
   const res = await fetch(`${BASE}/post`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data)
+    body: JSON.stringify(payload)
   });
-  if (!res.ok) throw new Error('Error al crear figura');
-  return res.json();
+  return handleResponse(res, 'Error al crear figura');
 }
 
-export async function updateFigura(id, data) {
+export async function update(id, payload) {
   const res = await fetch(`${BASE}/update/${id}`, {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data)
+    body: JSON.stringify(payload)
   });
-  if (!res.ok) throw new Error('Error al actualizar figura');
-  return res.json();
+  return handleResponse(res, 'Error al actualizar figura');
 }
 
-export async function deleteFigura(id) {
+export async function remove(id) {
   const res = await fetch(`${BASE}/delete/${id}`, { method: 'DELETE' });
-  if (!res.ok) throw new Error('Error al eliminar figura');
-  return res.json();
+  return handleResponse(res, 'Error al eliminar figura');
 }

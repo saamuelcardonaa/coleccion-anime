@@ -1,94 +1,255 @@
-import React, { useEffect, useState } from 'react';
-import { createFigura, getFigura, updateFigura } from '../services/figurasApi';
-import { useNavigate, useParams } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { create, update, getById } from "../services/figurasApi";
 
-export default function FiguraForm() {
+const initialForm = {
+  nombre: "",
+  anime: "",
+  personaje: "",
+  precio: "",
+  stock: "",
+  imagen: "",
+  malId: "",
+};
+
+function FiguraForm() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [form, setForm] = useState({ nombre:'', anime:'', personaje:'', precio:'', stock:'', imagen:'' });
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const [form, setForm] = useState(initialForm);
+  const [loading, setLoading] = useState(!!id);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
+  const [successMsg, setSuccessMsg] = useState("");
+  const [fieldErrors, setFieldErrors] = useState({});
 
   useEffect(() => {
     if (id) {
       setLoading(true);
-      getFigura(id)
-        .then(data => setForm(data.data))
-        .catch(e => setError(e.message))
-        .finally(() => setLoading(false));
+      getById(id)
+        .then((data) => {
+          setForm({
+            nombre: data.nombre || "",
+            anime: data.anime || "",
+            personaje: data.personaje || "",
+            precio: data.precio != null ? String(data.precio) : "",
+            stock: data.stock != null ? String(data.stock) : "",
+            imagen: data.imagen || "",
+            malId: data.malId != null ? String(data.malId) : "",
+          });
+          setLoading(false);
+        })
+        .catch(() => {
+          setError("No se pudo cargar la figura.");
+          setLoading(false);
+        });
     }
   }, [id]);
 
-  const handleChange = e => {
-    const { name, value } = e.target;
-    setForm(f => ({ ...f, [name]: value }));
-  };
-
   const validate = () => {
-    if (!form.nombre.trim() || !form.anime.trim() || !form.precio || !form.stock) return false;
-    if (form.nombre.length < 3 || form.anime.length < 3) return false;
-    if (Number(form.precio) < 0 || Number(form.stock) < 0) return false;
-    return true;
+    const errors = {};
+    if (!form.nombre.trim()) errors.nombre = "El nombre es requerido.";
+    if (!form.anime.trim()) errors.anime = "El anime es requerido.";
+    if (form.precio === "" || isNaN(form.precio) || Number(form.precio) < 0)
+      errors.precio = "El precio debe ser un número mayor o igual a 0.";
+    if (form.stock === "" || isNaN(form.stock) || Number(form.stock) < 0)
+      errors.stock = "El stock debe ser un número mayor o igual a 0.";
+    if (form.malId && (isNaN(form.malId) || !Number.isInteger(Number(form.malId))))
+      errors.malId = "malId debe ser un número entero.";
+    return errors;
   };
 
-  const handleSubmit = async e => {
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+    setFieldErrors((prev) => ({
+      ...prev,
+      [name]: undefined,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!validate()) return setError('Completa todos los campos obligatorios correctamente');
-    setLoading(true);
-    setError('');
+    setError("");
+    setSuccessMsg("");
+    const errors = validate();
+    setFieldErrors(errors);
+    if (Object.keys(errors).length > 0) return;
+
+    setSaving(true);
     try {
-      if (id) {
-        await updateFigura(id, form);
-        setSuccess('Figura actualizada');
+      const payload = {
+        ...form,
+        precio: Number(form.precio),
+        stock: Number(form.stock),
+      };
+      if (!payload.malId) {
+        delete payload.malId;
       } else {
-        await createFigura(form);
-        setSuccess('Figura creada');
-        setForm({ nombre:'', anime:'', personaje:'', precio:'', stock:'', imagen:'' });
+        payload.malId = Number(payload.malId);
       }
-      setTimeout(() => { setSuccess(''); navigate('/'); }, 1200);
-    } catch (e) {
-      setError(e.message);
+      if (id) {
+        await update(id, payload);
+        setSuccessMsg("Figura actualizada correctamente.");
+      } else {
+        await create(payload);
+        setSuccessMsg("Figura creada correctamente.");
+      }
+      setTimeout(() => navigate("/figuras"), 1200);
+    } catch (err) {
+      setError("Ocurrió un error al guardar la figura.");
     } finally {
-      setLoading(false);
+      setSaving(false);
     }
   };
 
+  if (loading) {
+    return (
+      <div className="d-flex justify-content-center mt-5">
+        <div className="spinner-border" role="status" aria-label="Cargando"></div>
+      </div>
+    );
+  }
+
   return (
-    <div className="container mt-4">
-      <h2>{id ? 'Editar' : 'Nueva'} Figura</h2>
-      {error && <div className="alert alert-danger">{error}</div>}
-      {success && <div className="alert alert-success">{success}</div>}
-      <form onSubmit={handleSubmit} className="row g-3">
-        <div className="col-md-6">
-          <label className="form-label">Nombre*</label>
-          <input className="form-control" name="nombre" value={form.nombre} onChange={handleChange} required minLength={3} />
+    <div className="row justify-content-center mt-4">
+      <div className="col-md-8">
+        <div className="card bg-secondary text-light shadow">
+          <div className="card-header text-center">
+            <h3 className="mb-0">
+              <i className={`bi ${id ? "bi-pencil-square" : "bi-plus-circle"} me-2`}></i>
+              {id ? "Editar Figura" : "Nueva Figura"}
+            </h3>
+          </div>
+          <div className="card-body">
+            {error && (
+              <div className="alert alert-danger" role="alert">
+                {error}
+              </div>
+            )}
+            {successMsg && (
+              <div className="alert alert-success" role="alert">
+                {successMsg}
+              </div>
+            )}
+            <form onSubmit={handleSubmit} noValidate>
+              <div className="mb-3">
+                <label className="form-label">Nombre *</label>
+                <input
+                  type="text"
+                  className={`form-control${fieldErrors.nombre ? " is-invalid" : ""}`}
+                  name="nombre"
+                  value={form.nombre}
+                  onChange={handleChange}
+                  disabled={saving}
+                />
+                {fieldErrors.nombre && (
+                  <div className="invalid-feedback">{fieldErrors.nombre}</div>
+                )}
+              </div>
+              <div className="mb-3">
+                <label className="form-label">Anime *</label>
+                <input
+                  type="text"
+                  className={`form-control${fieldErrors.anime ? " is-invalid" : ""}`}
+                  name="anime"
+                  value={form.anime}
+                  onChange={handleChange}
+                  disabled={saving}
+                />
+                {fieldErrors.anime && (
+                  <div className="invalid-feedback">{fieldErrors.anime}</div>
+                )}
+              </div>
+              <div className="mb-3">
+                <label className="form-label">Personaje</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  name="personaje"
+                  value={form.personaje}
+                  onChange={handleChange}
+                  disabled={saving}
+                />
+              </div>
+              <div className="mb-3">
+                <label className="form-label">Precio *</label>
+                <input
+                  type="number"
+                  className={`form-control${fieldErrors.precio ? " is-invalid" : ""}`}
+                  name="precio"
+                  value={form.precio}
+                  onChange={handleChange}
+                  min="0"
+                  disabled={saving}
+                />
+                {fieldErrors.precio && (
+                  <div className="invalid-feedback">{fieldErrors.precio}</div>
+                )}
+              </div>
+              <div className="mb-3">
+                <label className="form-label">Stock *</label>
+                <input
+                  type="number"
+                  className={`form-control${fieldErrors.stock ? " is-invalid" : ""}`}
+                  name="stock"
+                  value={form.stock}
+                  onChange={handleChange}
+                  min="0"
+                  disabled={saving}
+                />
+                {fieldErrors.stock && (
+                  <div className="invalid-feedback">{fieldErrors.stock}</div>
+                )}
+              </div>
+              <div className="mb-3">
+                <label className="form-label">Imagen (URL)</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  name="imagen"
+                  value={form.imagen}
+                  onChange={handleChange}
+                  disabled={saving}
+                />
+              </div>
+              <div className="mb-3">
+                <label className="form-label">malId</label>
+                <input
+                  type="text"
+                  className={`form-control${fieldErrors.malId ? " is-invalid" : ""}`}
+                  name="malId"
+                  value={form.malId}
+                  onChange={handleChange}
+                  disabled={saving}
+                />
+                {fieldErrors.malId && (
+                  <div className="invalid-feedback">{fieldErrors.malId}</div>
+                )}
+              </div>
+              <div className="d-flex justify-content-end gap-2 mt-4">
+                <button type="submit" className="btn btn-primary" disabled={saving}>
+                  <i className="bi bi-save me-1"></i>
+                  {saving ? "Guardando..." : "Guardar"}
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={() => navigate("/figuras")}
+                  disabled={saving}
+                >
+                  <i className="bi bi-arrow-left me-1"></i>
+                  Cancelar
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
-        <div className="col-md-6">
-          <label className="form-label">Anime*</label>
-          <input className="form-control" name="anime" value={form.anime} onChange={handleChange} required minLength={3} />
-        </div>
-        <div className="col-md-6">
-          <label className="form-label">Personaje</label>
-          <input className="form-control" name="personaje" value={form.personaje} onChange={handleChange} />
-        </div>
-        <div className="col-md-3">
-          <label className="form-label">Precio*</label>
-          <input className="form-control" name="precio" type="number" value={form.precio} onChange={handleChange} required min={0} />
-        </div>
-        <div className="col-md-3">
-          <label className="form-label">Stock*</label>
-          <input className="form-control" name="stock" type="number" value={form.stock} onChange={handleChange} required min={0} />
-        </div>
-        <div className="col-12">
-          <label className="form-label">Imagen (URL)</label>
-          <input className="form-control" name="imagen" value={form.imagen} onChange={handleChange} />
-        </div>
-        <div className="col-12">
-          <button className="btn btn-primary" type="submit" disabled={loading}>{loading ? 'Guardando...' : (id ? 'Actualizar' : 'Crear')}</button>
-          <button className="btn btn-secondary ms-2" type="button" onClick={() => navigate('/')}>Cancelar</button>
-        </div>
-      </form>
+      </div>
     </div>
   );
 }
+
+export default FiguraForm;

@@ -1,20 +1,27 @@
-import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Navbar from './components/Navbar';
-import FigurasList from './pages/FigurasList';
-import FiguraDetail from './pages/FiguraDetail';
-import FiguraForm from './pages/FiguraForm';
+import React from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import Navbar from "./components/Navbar";
+import FigurasList from "./pages/FigurasList";
+import FiguraDetail from "./pages/FiguraDetail";
+import FiguraForm from "./pages/FiguraForm";
+import Home from "./pages/Home";
 
-export default function App() {
+function App() {
   return (
-    <BrowserRouter>
+    <div className="min-vh-100 bg-dark text-light">
       <Navbar />
-      <Routes>
-        <Route path="/" element={<FigurasList />} />
-        <Route path="/nueva" element={<FiguraForm />} />
-        <Route path=":id" element={<FiguraDetail />} />
-        <Route path=":id/editar" element={<FiguraForm />} />
-      </Routes>
-    </BrowserRouter>
+      <main className="container py-4">
+        <Routes>
+          <Route path="/" element={<Navigate to="/inicio" replace />} />
+          <Route path="/inicio" element={<Home />} />
+          <Route path="/figuras" element={<FigurasList />} />
+          <Route path="/figuras/nueva" element={<FiguraForm />} />
+          <Route path="/figuras/editar/:id" element={<FiguraForm />} />
+          <Route path="/figuras/:id" element={<FiguraDetail />} />
+        </Routes>
+      </main>
+    </div>
   );
 }
+
+export default App;

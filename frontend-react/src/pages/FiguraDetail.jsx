@@ -1,37 +1,130 @@
-import React, { useEffect, useState } from 'react';
-import { getFigura } from '../services/figurasApi';
-import { useParams, Link } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { getById, remove } from "../services/figurasApi";
 
-export default function FiguraDetail() {
+function FiguraDetail() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [figura, setFigura] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
+  const [successMsg, setSuccessMsg] = useState("");
 
   useEffect(() => {
     setLoading(true);
-    getFigura(id)
-      .then(data => setFigura(data.data))
-      .catch(e => setError(e.message))
-      .finally(() => setLoading(false));
+    setError("");
+    getById(id)
+      .then((data) => {
+        setFigura(data);
+        setLoading(false);
+      })
+      .catch(() => {
+        setError("No se pudo cargar la figura.");
+        setLoading(false);
+      });
   }, [id]);
 
-  if (loading) return <div className="alert alert-info">Cargando...</div>;
-  if (error) return <div className="alert alert-danger">{error}</div>;
-  if (!figura) return <div>No encontrada</div>;
+  const handleDelete = async () => {
+    if (!window.confirm("¿Seguro que deseas eliminar esta figura?")) return;
+    try {
+      await remove(id);
+      setSuccessMsg("Figura eliminada correctamente.");
+      setTimeout(() => navigate("/figuras"), 1200);
+    } catch {
+      setError("No se pudo eliminar la figura.");
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="d-flex justify-content-center mt-5">
+        <div className="spinner-border" role="status" aria-label="Cargando"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="alert alert-danger mt-4" role="alert">
+        {error}
+      </div>
+    );
+  }
+
+  if (!figura) {
+    return null;
+  }
 
   return (
     <div className="container mt-4">
-      <h2>{figura.nombre}</h2>
-      <p><b>Anime:</b> {figura.anime}</p>
-      <p><b>Personaje:</b> {figura.personaje}</p>
-      <p><b>Precio:</b> {figura.precio}</p>
-      <p><b>Stock:</b> {figura.stock}</p>
-      {figura.imagen && <img src={figura.imagen} alt={figura.nombre} style={{maxWidth:300}} />}
-      <div className="mt-3">
-        <Link to={`/${figura._id}/editar`} className="btn btn-warning me-2">Editar</Link>
-        <Link to="/" className="btn btn-secondary">Volver</Link>
+      {successMsg && (
+        <div className="alert alert-success" role="alert">
+          {successMsg}
+        </div>
+      )}
+      <div className="row g-4 justify-content-center align-items-start">
+        {figura.imagen && (
+          <div className="col-12 col-md-5">
+            <div className="card bg-dark text-light shadow-sm h-100">
+              <img
+                src={figura.imagen}
+                className="card-img-top"
+                alt={figura.nombre}
+                style={{ objectFit: "cover", height: "350px" }}
+              />
+            </div>
+          </div>
+        )}
+        <div className={figura.imagen ? "col-12 col-md-7" : "col-12 col-md-8"}>
+          <div className="card bg-dark text-light shadow-sm h-100">
+            <div className="card-body">
+              <h3 className="card-title mb-3">{figura.nombre}</h3>
+              <h5 className="card-subtitle mb-2 text-info">{figura.anime}</h5>
+              <p className="mb-2">
+                <strong>Personaje:</strong> {figura.personaje}
+              </p>
+              <div className="mb-3">
+                <span className="badge bg-info text-dark me-2 fs-6">
+                  ${figura.precio}
+                </span>
+                <span className="badge bg-warning text-dark fs-6">
+                  Stock: {figura.stock}
+                </span>
+                {figura.malId && (
+                  <span className="badge bg-secondary ms-2">
+                    malId: {figura.malId}
+                  </span>
+                )}
+              </div>
+              <div className="d-flex gap-2 mt-4">
+                <button
+                  className="btn btn-secondary"
+                  onClick={() => navigate("/figuras")}
+                >
+                  <i className="bi bi-arrow-left me-1"></i>
+                  Volver
+                </button>
+                <button
+                  className="btn btn-primary"
+                  onClick={() => navigate(`/figuras/editar/${figura._id}`)}
+                >
+                  <i className="bi bi-pencil-square me-1"></i>
+                  Editar
+                </button>
+                <button
+                  className="btn btn-danger"
+                  onClick={handleDelete}
+                >
+                  <i className="bi bi-trash me-1"></i>
+                  Eliminar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
 }
+
+export default FiguraDetail;
