@@ -4,7 +4,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { obtenerFiguras, eliminarFigura } from '../services/figuraService';
+import { getAllFiguras, deleteFigura } from '../services/figuraService';
 import './FiguraList.css';
 
 export default function FiguraList() {
@@ -25,28 +25,21 @@ export default function FiguraList() {
    * Carga la lista de figuras del servidor backend
    */
   useEffect(() => {
+    const cargarFiguras = async () => {
+      try {
+        setCargando(true);
+        setError(null);
+        const datos = await getAllFiguras();
+        setFiguras(datos);
+      } catch (err) {
+        setError('❌ No se pudo cargar las figuras.');
+        console.error('Error cargando figuras:', err);
+      } finally {
+        setCargando(false);
+      }
+    };
     cargarFiguras();
   }, []);
-
-  /**
-   * cargarFiguras()
-   * Función asincrónica que obtiene todas las figuras del backend
-   * Maneja errores y actualiza el estado de carga
-   */
-  const cargarFiguras = async () => {
-    try {
-      setCargando(true);
-      setError(null);
-      const datos = await obtenerFiguras();
-      setFiguras(datos);
-    } catch (err) {
-      // Si falla, muestra un mensaje de error útil
-      setError('❌ No se pudo cargar las figuras. Verifica que el backend esté corriendo en puerto 5000');
-      console.error('Error cargando figuras:', err);
-    } finally {
-      setCargando(false);
-    }
-  };
 
   /**
    * handleEliminar()
@@ -63,7 +56,7 @@ export default function FiguraList() {
     }
 
     try {
-      await eliminarFigura(id);
+      await deleteFigura(id);
       alert('✅ Figura eliminada exitosamente');
       // Recargar la lista para reflejar cambios
       cargarFiguras();
@@ -92,109 +85,6 @@ export default function FiguraList() {
         {error && (
           <div className="alert alert-danger alert-dismissible fade show" role="alert">
             {error}
-            <button 
-              type="button" 
-              className="btn-close" 
-              onClick={() => setError(null)}
-              aria-label="Close"
-            ></button>
-          </div>
-        )}
-
-        {/* Mostrar spinner (loading) mientras se cargan datos */}
-        {cargando && (
-          <div className="loading-spinner">
-            <div className="spinner-border" role="status">
-              <span className="visually-hidden">Cargando...</span>
-            </div>
-            <p>Cargando figuras...</p>
-          </div>
-        )}
-
-        {/* Mostrar tabla de figuras si hay datos y no está cargando */}
-        {!cargando && figuras.length > 0 && (
-          <div className="table-responsive">
-            <table className="table table-hover">
-              <thead>
-                <tr>
-                  <th>Imagen</th>
-                  <th>Nombre</th>
-                  <th>Anime</th>
-                  <th>Personaje</th>
-                  <th>Precio</th>
-                  <th>Stock</th>
-                  <th>Acciones</th>
-                </tr>
-              </thead>
-              <tbody>
-                {/* Recorrer cada figura y mostrar una fila en la tabla */}
-                {figuras.map((figura) => (
-                  <tr key={figura._id}>
-                    {/* Columna: Imagen */}
-                    <td>
-                      {figura?.imagen ? (
-                        <img 
-                          src={figura?.imagen} 
-                          alt={figura.nombre}
-                          className="tabla-imagen"
-                          onError={(e) => e.target.style.display = 'none'}
-                        />
-                      ) : (
-                        <div className="sin-imagen">🖼️</div>
-                      )}
-                    </td>
-
-                    {/* Columna: Nombre */}
-                    <td>
-                      <strong>{figura.nombre}</strong>
-                    </td>
-
-                    {/* Columna: Anime */}
-                    <td>{figura.anime || '-'}</td>
-
-                    {/* Columna: Personaje */}
-                    <td>{figura.personaje || '-'}</td>
-
-                    {/* Columna: Precio */}
-                    <td>
-                      <span className="precio-fuerte">
-                        ${(figura.precio || 0).toFixed(2)}
-                      </span>
-                    </td>
-
-                    {/* Columna: Stock con badge */}
-                    <td>
-                      <span className={`badge-stock ${figura.stock > 0 ? 'badge-disponible' : 'badge-agotado'}`}>
-                        {figura.stock || 0} {figura.stock === 1 ? 'unidad' : 'unidades'}
-                      </span>
-                    </td>
-
-                    {/* Columna: Botones de acción (Editar, Eliminar) */}
-                    <td>
-                      <div className="celda-acciones">
-                        {/* Botón Editar - navega a /editar/:id */}
-                        <button
-                          className="btn-tabla btn-editar"
-                          onClick={() => navigate(`/editar/${figura._id}`, { state: { figura } })}
-                          title={`Editar ${figura.nombre}`}
-                        >
-                          ✏️ Editar
-                        </button>
-
-                        {/* Botón Eliminar - solicita confirmación */}
-                        <button
-                          className="btn-tabla btn-eliminar"
-                          onClick={() => handleEliminar(figura._id, figura.nombre)}
-                          title={`Eliminar ${figura.nombre}`}
-                        >
-                          🗑️ Eliminar
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
           </div>
         )}
 

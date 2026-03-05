@@ -11,28 +11,20 @@ const app = express();
 
 // Middlewares generales
 app.use(express.json());          // parsea JSON en el cuerpo de las solicitudes
-// Configuración CORS con whitelist
-const whitelist = [
-  'http://localhost:4200',
-  // TODO: reemplaza este dominio por el de tu frontend en producción
-  'https://coleccion-anime.vercel.app/api/v1/figuras/get/all'
-];
-
+// Configuración CORS dinámica para localhost, .vercel.app y Postman
 const corsOptions = {
   origin: function (origin, callback) {
-    if (!origin) return callback(null, true); // Permite requests sin origin (como Postman)
-    if (whitelist.some(entry => typeof entry === 'string' ? entry === origin : entry.test(origin))) {
-      callback(null, true);
-    } else {
-      callback(new Error('No permitido por CORS'));
-    }
+    if (!origin) return callback(null, true); // Permitir herramientas como Postman
+    if (origin.startsWith('http://localhost:')) return callback(null, true);
+    if (origin.endsWith('.vercel.app')) return callback(null, true);
+    callback(new Error('No permitido por CORS'));
   },
   methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
 };
+// Aplicar CORS antes de las rutas
 app.use(cors(corsOptions));
-
 // Manejo explícito de preflight OPTIONS para todas las rutas
 app.options('*', cors(corsOptions));
 app.use(requestLogger);           // registra cada petición en la consola

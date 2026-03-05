@@ -33,8 +33,9 @@ export default function App() {
     try {
       setJikanLoading(true);
       setJikanError("");
+      const FIGURAS_URL = `${import.meta.env.VITE_API_URL}/figuras`;
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/v1/figuras/jikan/buscar?nombre=${encodeURIComponent(nombreAnime)}`
+        `${FIGURAS_URL}/jikan/buscar?nombre=${encodeURIComponent(nombreAnime)}`
       );
       if (!response.ok) {
         throw new Error("Error al buscar en Jikan API");

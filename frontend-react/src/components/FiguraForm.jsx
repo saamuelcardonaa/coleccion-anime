@@ -4,7 +4,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
-import { crearFigura, actualizarFigura } from '../services/figuraService';
+import { createFigura, updateFigura } from '../services/figuraService';
 import './FiguraForm.css';
 
 export default function FiguraForm() {
@@ -135,11 +135,11 @@ export default function FiguraForm() {
     try {
       if (id) {
         // Modo edición: usar PUT
-        await actualizarFigura(id, formData);
+        await updateFigura(id, formData);
         alert('Figura actualizada exitosamente');
       } else {
         // Modo creación: usar POST
-        await crearFigura(formData);
+        await createFigura(formData);
         alert('Figura creada exitosamente');
       }
 

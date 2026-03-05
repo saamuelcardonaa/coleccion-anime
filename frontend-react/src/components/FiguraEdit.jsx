@@ -4,7 +4,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { obtenerFiguraPorId } from '../services/figuraService';
+import { getFiguraById } from '../services/figuraService';
 import FiguraForm from './FiguraForm';
 
 export default function FiguraEdit() {
@@ -28,7 +28,7 @@ export default function FiguraEdit() {
     const cargarFigura = async () => {
       try {
         setCargando(true);
-        const data = await obtenerFiguraPorId(id);
+        const data = await getFiguraById(id);
         setFigura(data);
       } catch (err) {
         setError('No se pudo cargar la figura: ' + err.message);

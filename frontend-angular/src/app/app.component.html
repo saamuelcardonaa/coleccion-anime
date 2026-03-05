@@ -20,19 +20,18 @@
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Listado</a>
+          <a class="nav-link" routerLink="/figuras" routerLinkActive="active">Listado</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLink="/crear" routerLinkActive="active">Crear</a>
+          <a class="nav-link" routerLink="/figuras/nueva" routerLinkActive="active">Crear</a>
         </li>
       </ul>
     </div>
   </div>
 </nav>
 
-<!-- Contenedor principal: aquí se renderiza el componente figura-list -->
-<!-- Este componente se encarga de toda la lógica CRUD -->
-<app-figura-list></app-figura-list>
+<!-- Aquí se renderizan los componentes según la ruta -->
+<router-outlet></router-outlet>
 
 <!-- Footer simple -->
 <footer class="bg-dark text-light text-center py-3 mt-5">
