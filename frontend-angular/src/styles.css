@@ -25,3 +25,20 @@ app-root {
   flex-direction: column;
   min-height: 100vh;
 }
+
+/* Utilidad: eleva y da sombra al hacer hover */
+.hover-lift {
+  transition: transform 0.2s cubic-bezier(.4,2,.6,1), box-shadow 0.2s, border-color 0.2s;
+}
+.hover-lift:hover {
+  transform: translateY(-6px) scale(1.03);
+  box-shadow: 0 0.5rem 1.5rem rgba(0,0,0,0.25);
+}
+
+/* Utilidad: cambia el borde a warning al hacer hover */
+.hover-border-warning {
+  transition: border-color 0.2s;
+}
+.hover-border-warning:hover {
+  border-color: #ffc107 !important;
+}

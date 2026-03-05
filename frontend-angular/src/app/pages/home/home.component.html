@@ -6,8 +6,9 @@
       <h1 class="display-4 fw-bold mb-3">Colección Anime</h1>
       <p class="lead text-secondary mb-4">Gestiona tu colección de figuras de anime de forma moderna y sencilla.</p>
       <div class="mb-3">
+        <!-- Requiere bootstrap-icons para los iconos -->
         <a routerLink="/figuras" class="btn btn-warning btn-lg me-2">
-          <i class="bi bi-collection me-2"></i> Ver catálogo
+          <i class="bi bi-grid-3x3-gap me-2"></i> Ver catálogo
         </a>
         <a routerLink="/figuras/nueva" class="btn btn-outline-light btn-lg">
           <i class="bi bi-plus-circle me-2"></i> Añadir figura
@@ -17,7 +18,7 @@
     </div>
     <!-- Columna derecha: card info -->
     <div class="col-lg-5">
-      <div class="card bg-dark border border-secondary rounded-4 shadow-sm p-4">
+      <div class="card bg-dark border border-secondary rounded-4 shadow-sm p-4 hover-lift hover-border-warning">
         <ul class="list-unstyled mb-0 card-info-list">
           <li class="mb-2"><span class="badge text-bg-warning me-2">✔</span> CRUD completo</li>
           <li class="mb-2"><span class="badge text-bg-secondary me-2">✔</span> MongoDB Atlas</li>
@@ -34,34 +35,40 @@
   <div class="row g-4">
     <!-- Card 1: Catálogo -->
     <div class="col-md-4">
-      <div class="card bg-dark text-light border border-secondary shadow-sm h-100">
+      <div class="card bg-dark text-light border border-secondary shadow-sm h-100 hover-lift hover-border-warning">
         <div class="card-body text-center">
           <i class="bi bi-box-seam display-5 mb-3"></i>
           <h5 class="card-title">Catálogo visual</h5>
           <p class="card-text text-secondary">Explora y filtra tu colección de figuras de anime con una interfaz moderna.</p>
-          <a routerLink="/figuras" class="btn btn-sm btn-outline-warning mt-2">Ver catálogo</a>
+          <a routerLink="/figuras" class="btn btn-sm btn-outline-warning mt-2">
+            <i class="bi bi-grid-3x3-gap me-1"></i> Ver catálogo
+          </a>
         </div>
       </div>
     </div>
     <!-- Card 2: CRUD -->
     <div class="col-md-4">
-      <div class="card bg-dark text-light border border-secondary shadow-sm h-100">
+      <div class="card bg-dark text-light border border-secondary shadow-sm h-100 hover-lift hover-border-warning">
         <div class="card-body text-center">
           <i class="bi bi-pencil-square display-5 mb-3"></i>
           <h5 class="card-title">CRUD fácil</h5>
           <p class="card-text text-secondary">Añade, edita o elimina figuras con formularios claros y validados.</p>
-          <a routerLink="/figuras/nueva" class="btn btn-sm btn-outline-info mt-2">Añadir figura</a>
+          <a routerLink="/figuras/nueva" class="btn btn-sm btn-outline-info mt-2">
+            <i class="bi bi-plus-circle me-1"></i> Añadir figura
+          </a>
         </div>
       </div>
     </div>
     <!-- Card 3: API -->
     <div class="col-md-4">
-      <div class="card bg-dark text-light border border-secondary shadow-sm h-100">
+      <div class="card bg-dark text-light border border-secondary shadow-sm h-100 hover-lift hover-border-warning">
         <div class="card-body text-center">
           <i class="bi bi-cloud-arrow-down display-5 mb-3"></i>
           <h5 class="card-title">API REST</h5>
           <p class="card-text text-secondary">Tus datos siempre actualizados gracias a la API desplegada en Vercel.</p>
-          <a routerLink="/figuras" class="btn btn-sm btn-outline-warning mt-2">Ver API en acción</a>
+          <a routerLink="/figuras" class="btn btn-sm btn-outline-warning mt-2">
+            <i class="bi bi-cloud-arrow-down me-1"></i> Ver API en acción
+          </a>
         </div>
       </div>
     </div>
@@ -75,7 +82,7 @@
       <span class="fs-5">¿Listo para gestionar tu colección?</span>
     </div>
     <a routerLink="/figuras" class="btn btn-warning btn-lg">
-      <i class="bi bi-collection me-2"></i> Ir al catálogo
+      <i class="bi bi-grid-3x3-gap me-2"></i> Ir al catálogo
     </a>
   </div>
 </section>
