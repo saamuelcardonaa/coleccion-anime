@@ -1,0 +1,50 @@
+<!-- Hero principal -->
+<section class="bg-dark text-light border border-secondary rounded-4 p-4 p-md-5 shadow-sm mb-5">
+  <div class="text-center mb-4">
+    <h1 class="display-4 fw-bold">Colección Anime</h1>
+    <p class="lead text-secondary">CRUD de figuras de anime consumiendo la API desplegada en Vercel.</p>
+    <!-- Botones principales -->
+    <a routerLink="/figuras" class="btn btn-warning me-2">
+      <i class="bi bi-collection me-2"></i>
+      Ver catálogo
+    </a>
+    <a routerLink="/figuras/nueva" class="btn btn-outline-light">
+      <i class="bi bi-plus-circle me-2"></i>
+      Añadir figura
+    </a>
+  </div>
+</section>
+
+<!-- Grid de 3 cards informativas -->
+<div class="row g-4 mb-4">
+  <!-- Card 1: Catálogo -->
+  <div class="col-md-4">
+    <div class="card bg-dark text-light border border-secondary shadow-sm h-100">
+      <div class="card-body text-center">
+        <i class="bi bi-box-seam display-5 mb-3"></i>
+        <h5 class="card-title">Catálogo de Figuras</h5>
+        <p class="card-text text-secondary">Explora y gestiona tu colección de figuras de anime fácilmente.</p>
+      </div>
+    </div>
+  </div>
+  <!-- Card 2: CRUD -->
+  <div class="col-md-4">
+    <div class="card bg-dark text-light border border-secondary shadow-sm h-100">
+      <div class="card-body text-center">
+        <i class="bi bi-pencil-square display-5 mb-3"></i>
+        <h5 class="card-title">CRUD Intuitivo</h5>
+        <p class="card-text text-secondary">Añade, edita o elimina figuras con formularios claros y validados.</p>
+      </div>
+    </div>
+  </div>
+  <!-- Card 3: API -->
+  <div class="col-md-4">
+    <div class="card bg-dark text-light border border-secondary shadow-sm h-100">
+      <div class="card-body text-center">
+        <i class="bi bi-cloud-arrow-down display-5 mb-3"></i>
+        <h5 class="card-title">API REST</h5>
+        <p class="card-text text-secondary">La app consume una API REST propia desplegada en Vercel.</p>
+      </div>
+    </div>
+  </div>
+</div>

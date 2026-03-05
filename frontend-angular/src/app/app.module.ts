@@ -12,6 +12,7 @@ import { AppComponent } from './app.component';
 import { FiguraListComponent } from './components/figura-list/figura-list.component';
 import { FiguraFormComponent } from './components/figura-form/figura-form.component';
 import { FiguraDetailComponent } from './components/figura-detail/figura-detail.component';
+import { HomeComponent } from './pages/home/home.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { FiguraDetailComponent } from './components/figura-detail/figura-detail.
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    HomeComponent // Importar standalone component
   ],
   providers: [],
   bootstrap: [AppComponent]
