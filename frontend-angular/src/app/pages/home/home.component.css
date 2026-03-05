@@ -1,0 +1,17 @@
+/* Fuente Lexend para todo el home */
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@400;600;700&display=swap');
+
+:host {
+  font-family: 'Lexend', Arial, sans-serif;
+}
+
+/* Mejorar contraste de los badges de la card info */
+.card-info-list .badge {
+  color: #212529 !important;
+  background-color: #ffc107 !important;
+  font-weight: 600;
+}
+
+.card-info-list li {
+  color: #fff;
+}
