@@ -1,3 +1,6 @@
+// Página de detalle de una figura
+// Muestra información completa, imagen, badges y acciones (editar/eliminar)
+
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getById, remove } from "../services/figurasApi";
@@ -10,6 +13,7 @@ function FiguraDetail() {
   const [error, setError] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
 
+  // Carga de datos al montar el componente
   useEffect(() => {
     setLoading(true);
     setError("");
@@ -24,6 +28,7 @@ function FiguraDetail() {
       });
   }, [id]);
 
+  // Eliminar figura con confirmación
   const handleDelete = async () => {
     if (!window.confirm("¿Seguro que deseas eliminar esta figura?")) return;
     try {
@@ -35,6 +40,7 @@ function FiguraDetail() {
     }
   };
 
+  // Feedback de carga y errores
   if (loading) {
     return (
       <div className="d-flex justify-content-center mt-5">
@@ -57,12 +63,15 @@ function FiguraDetail() {
 
   return (
     <div className="container mt-4">
+      {/* Mensaje de éxito tras eliminar */}
       {successMsg && (
         <div className="alert alert-success" role="alert">
           {successMsg}
         </div>
       )}
+      {/* Layout en dos columnas: imagen y datos */}
       <div className="row g-4 justify-content-center align-items-start">
+        {/* Columna izquierda: imagen en card */}
         {figura.imagen && (
           <div className="col-12 col-md-5">
             <div className="card bg-dark text-light shadow-sm h-100">
@@ -75,6 +84,7 @@ function FiguraDetail() {
             </div>
           </div>
         )}
+        {/* Columna derecha: datos y acciones */}
         <div className={figura.imagen ? "col-12 col-md-7" : "col-12 col-md-8"}>
           <div className="card bg-dark text-light shadow-sm h-100">
             <div className="card-body">
@@ -83,6 +93,7 @@ function FiguraDetail() {
               <p className="mb-2">
                 <strong>Personaje:</strong> {figura.personaje}
               </p>
+              {/* Badges para precio, stock y malId */}
               <div className="mb-3">
                 <span className="badge bg-info text-dark me-2 fs-6">
                   ${figura.precio}
@@ -96,6 +107,7 @@ function FiguraDetail() {
                   </span>
                 )}
               </div>
+              {/* Botones de acción: volver, editar, eliminar */}
               <div className="d-flex gap-2 mt-4">
                 <button
                   className="btn btn-secondary"

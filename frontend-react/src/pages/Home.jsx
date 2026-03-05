@@ -1,13 +1,19 @@
+// Página de inicio tipo "hero"
+// Presenta la app, acceso rápido al catálogo y resumen de tecnologías usadas
+
 import React from "react";
 import { Link } from "react-router-dom";
 
 function Home() {
   return (
+    // Hero principal: fondo oscuro, texto centrado, icono y botones
     <div className="bg-dark text-light min-vh-100 d-flex flex-column justify-content-center align-items-center py-5">
       <div className="text-center mb-5">
+        {/* Icono principal y título */}
         <i className="bi bi-collection display-1 mb-3"></i>
         <h1 className="display-3 fw-bold mb-3">Colección Anime</h1>
         <p className="lead mb-4">Aplicación CRUD completa consumiendo la misma API REST</p>
+        {/* Botones de acceso rápido */}
         <div className="d-flex justify-content-center gap-3 mb-4 flex-wrap">
           <Link to="/figuras" className="btn btn-primary btn-lg">
             <i className="bi bi-collection me-2"></i>
@@ -19,6 +25,7 @@ function Home() {
           </Link>
         </div>
       </div>
+      {/* Cards informativas sobre la arquitectura y tecnologías */}
       <div className="container">
         <div className="row row-cols-1 row-cols-md-3 g-3 justify-content-center">
           <div className="col">

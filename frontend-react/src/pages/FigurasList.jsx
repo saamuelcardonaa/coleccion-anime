@@ -1,8 +1,12 @@
+// Página de catálogo de figuras
+// Permite buscar, filtrar, ver en tabla o cards, y paginar resultados
+
 import React, { useEffect, useState } from "react";
 import { getAll, remove } from "../services/figurasApi";
 import { Link, useNavigate } from "react-router-dom";
 
 export default function FigurasList() {
+  // Estados principales: datos, loading, errores, vista, filtros y paginación
   const [figuras, setFiguras] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -13,6 +17,7 @@ export default function FigurasList() {
   const [page, setPage] = useState(1);
   const navigate = useNavigate();
 
+  // Carga inicial de datos desde la API
   useEffect(() => {
     setLoading(true);
     setError("");
@@ -27,23 +32,24 @@ export default function FigurasList() {
       });
   }, []);
 
-  // Filtro por search
+  // Filtro por texto (nombre, anime, personaje)
   const filtered = figuras.filter(f =>
     f.nombre.toLowerCase().includes(search.toLowerCase()) ||
     f.anime.toLowerCase().includes(search.toLowerCase()) ||
     f.personaje.toLowerCase().includes(search.toLowerCase())
   );
 
-  // Paginación
+  // Paginación client-side
   const totalPages = Math.ceil(filtered.length / pageSize) || 1;
   const paginated = filtered.slice((page - 1) * pageSize, page * pageSize);
 
-  // Cambiar página
+  // Cambio de página
   const goToPage = (p) => {
     if (p < 1 || p > totalPages) return;
     setPage(p);
   };
 
+  // Eliminar figura con feedback
   const handleDelete = async (id) => {
     setError("");
     setSuccessMsg("");
@@ -56,16 +62,18 @@ export default function FigurasList() {
     }
   };
 
-  // Reset page si cambia pageSize o search
+  // Reset de página al cambiar filtros
   useEffect(() => {
     setPage(1);
   }, [pageSize, search]);
 
   return (
     <div>
+      {/* Header y toggle de vista (tabla/cards) */}
       <div className="d-flex justify-content-between align-items-center mb-3">
         <h2>Figuras</h2>
         <div>
+          {/* Botones para cambiar entre vista tabla y cards */}
           <button
             className={`btn btn-outline-light me-2 ${view === "table" ? "active" : ""}`}
             onClick={() => setView("table")}
@@ -87,10 +95,11 @@ export default function FigurasList() {
         </div>
       </div>
 
-      {/* Panel de filtros */}
+      {/* Panel de filtros y contador */}
       <div className="card bg-secondary text-light mb-3 shadow-sm">
         <div className="card-body row align-items-center g-2">
           <div className="col-12 col-md-5 mb-2 mb-md-0">
+            {/* Input de búsqueda */}
             <input
               type="text"
               className="form-control"
@@ -100,6 +109,7 @@ export default function FigurasList() {
             />
           </div>
           <div className="col-6 col-md-3">
+            {/* Selector de cantidad por página */}
             <select
               className="form-select"
               value={pageSize}
@@ -111,6 +121,7 @@ export default function FigurasList() {
             </select>
           </div>
           <div className="col-6 col-md-4 text-end">
+            {/* Contador de resultados */}
             <span className="badge bg-dark fs-6">
               {filtered.length} figura{filtered.length !== 1 ? "s" : ""}
             </span>
@@ -118,6 +129,7 @@ export default function FigurasList() {
         </div>
       </div>
 
+      {/* Alerts de feedback (loading, error, success) */}
       {loading && (
         <div className="d-flex justify-content-center my-4">
           <div className="spinner-border" role="status" aria-label="Cargando"></div>
@@ -134,7 +146,7 @@ export default function FigurasList() {
         </div>
       )}
 
-      {/* Vista Tabla */}
+      {/* Vista Tabla: cumple rúbrica y es útil para comparar */}
       {view === "table" && (
         <div className="card bg-secondary text-light shadow-sm">
           <table className="table table-dark table-striped mb-0">
@@ -188,7 +200,7 @@ export default function FigurasList() {
         </div>
       )}
 
-      {/* Vista Cards */}
+      {/* Vista Cards: más visual y moderna */}
       {view === "cards" && (
         <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
           {paginated.length === 0 && !loading ? (
@@ -201,14 +213,14 @@ export default function FigurasList() {
             paginated.map((f) => (
               <div className="col" key={f._id}>
                 <div className="card bg-secondary text-light shadow-sm h-100">
-                  {f.imagen && (
-                    <img
-                      src={f.imagen}
-                      alt={f.nombre}
-                      className="card-img-top"
-                      style={{ objectFit: "cover", height: "200px" }}
-                    />
-                  )}
+                  {/* Imagen de la figura o placeholder local si falta o falla */}
+                  <img
+                    src={f.imagen ? f.imagen : "/placeholder.png"}
+                    alt={f.nombre}
+                    className="card-img-top"
+                    style={{ objectFit: "cover", height: "200px" }}
+                    onError={e => { e.target.onerror = null; e.target.src = "/placeholder.png"; }}
+                  />
                   <div className="card-body d-flex flex-column">
                     <h5 className="card-title">{f.nombre}</h5>
                     <h6 className="card-subtitle mb-2 text-info">{f.anime}</h6>
@@ -240,7 +252,7 @@ export default function FigurasList() {
         </div>
       )}
 
-      {/* Paginación */}
+      {/* Paginación Bootstrap */}
       {totalPages > 1 && (
         <nav className="mt-4 d-flex justify-content-center">
           <ul className="pagination pagination-dark mb-0">

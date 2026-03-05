@@ -1,3 +1,6 @@
+// Formulario para crear o editar una figura
+// Incluye validaciones, feedback visual y diseño profesional con Bootstrap
+
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { create, update, getById } from "../services/figurasApi";
@@ -22,6 +25,7 @@ function FiguraForm() {
   const [successMsg, setSuccessMsg] = useState("");
   const [fieldErrors, setFieldErrors] = useState({});
 
+  // Si hay id, carga los datos para edición
   useEffect(() => {
     if (id) {
       setLoading(true);
@@ -45,6 +49,7 @@ function FiguraForm() {
     }
   }, [id]);
 
+  // Validaciones de campos antes de enviar
   const validate = () => {
     const errors = {};
     if (!form.nombre.trim()) errors.nombre = "El nombre es requerido.";
@@ -58,6 +63,7 @@ function FiguraForm() {
     return errors;
   };
 
+  // Manejo de cambios en los inputs
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({
@@ -70,6 +76,7 @@ function FiguraForm() {
     }));
   };
 
+  // Envío del formulario (crear o actualizar)
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -105,6 +112,7 @@ function FiguraForm() {
     }
   };
 
+  // Feedback de carga
   if (loading) {
     return (
       <div className="d-flex justify-content-center mt-5">
@@ -116,7 +124,9 @@ function FiguraForm() {
   return (
     <div className="row justify-content-center mt-4">
       <div className="col-md-8">
+        {/* Card principal del formulario */}
         <div className="card bg-secondary text-light shadow">
+          {/* Header dinámico según modo (crear/editar) */}
           <div className="card-header text-center">
             <h3 className="mb-0">
               <i className={`bi ${id ? "bi-pencil-square" : "bi-plus-circle"} me-2`}></i>
@@ -124,6 +134,7 @@ function FiguraForm() {
             </h3>
           </div>
           <div className="card-body">
+            {/* Mensajes de error y éxito */}
             {error && (
               <div className="alert alert-danger" role="alert">
                 {error}
@@ -134,6 +145,7 @@ function FiguraForm() {
                 {successMsg}
               </div>
             )}
+            {/* Formulario controlado con validaciones visuales */}
             <form onSubmit={handleSubmit} noValidate>
               <div className="mb-3">
                 <label className="form-label">Nombre *</label>
@@ -229,6 +241,7 @@ function FiguraForm() {
                   <div className="invalid-feedback">{fieldErrors.malId}</div>
                 )}
               </div>
+              {/* Botones alineados a la derecha con iconos */}
               <div className="d-flex justify-content-end gap-2 mt-4">
                 <button type="submit" className="btn btn-primary" disabled={saving}>
                   <i className="bi bi-save me-1"></i>
