@@ -162,4 +162,6 @@ export class FiguraListComponent implements OnInit {
       this.page = p;
     }
   }
+
+  viewMode: 'cards' | 'table' = 'cards'; // Toggle de vista, por defecto 'cards'
 }

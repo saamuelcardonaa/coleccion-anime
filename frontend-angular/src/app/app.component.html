@@ -2,11 +2,10 @@
 <!-- Template principal de la aplicación Angular -->
 
 <!-- Navbar principal: fondo oscuro, texto claro, borde inferior -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark border-bottom border-secondary mb-4">
+<nav class="navbar navbar-expand-lg bg-dark border-bottom border-secondary navbar-dark">
   <div class="container-fluid">
-    <!-- Brand con icono y texto -->
-    <a class="navbar-brand d-flex align-items-center" routerLink="/">
-      <i class="bi bi-collection me-2"></i>
+    <!-- Brand a la izquierda -->
+    <a class="navbar-brand" routerLink="/">
       Colección Anime
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -16,22 +15,16 @@
       <!-- Links de navegación -->
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">
-            Home
-          </a>
+          <a class="nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">Home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLink="/figuras" routerLinkActive="active">Figuras</a>
+          <a class="nav-link" routerLink="/figuras" routerLinkActive="active">Catálogo</a>
         </li>
-        <!-- Si tienes categorías, añade aquí otro link -->
-        <!-- <li class="nav-item">
-          <a class="nav-link" routerLink="/categorias" routerLinkActive="active">Categorías</a>
-        </li> -->
       </ul>
       <!-- Botón CTA dorado a la derecha -->
       <a class="btn btn-warning" routerLink="/figuras/nueva">
         <i class="bi bi-plus-circle me-1"></i>
-        Añadir Figura
+        Añadir
       </a>
     </div>
   </div>

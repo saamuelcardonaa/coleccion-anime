@@ -1,32 +1,80 @@
-<!-- src/app/components/figura-list/figura-list.component.html -->
-<!-- Template para mostrar lista de figuras en una tabla Bootstrap con opciones CRUD -->
+<!-- Contenedor principal oscuro -->
+<div class="bg-dark text-light border border-secondary rounded-4 p-3 p-md-4 shadow-sm">
+  <!-- Mini hero: título, subtexto y botón añadir -->
+  <div class="mb-4 d-flex flex-wrap align-items-center justify-content-between gap-2">
+    <div>
+      <h2 class="fw-bold mb-1">Catálogo de Figuras</h2>
+      <p class="text-secondary mb-0">Explora, busca y administra tu colección de figuras de anime.</p>
+    </div>
+    <!-- Botón añadir figura (usa el handler ya existente) -->
+    <button class="btn btn-warning" (click)="irACrear()">
+      <i class="bi bi-plus-circle me-1"></i> Añadir figura
+    </button>
+  </div>
 
-<div class="container mt-4">
-  <!-- Header -->
+  <!-- Toggle Cards/Tabla -->
+  <div class="btn-group mb-3" role="group" aria-label="Vista">
+    <button type="button" class="btn btn-outline-warning" [class.active]="viewMode === 'cards'" (click)="viewMode = 'cards'">
+      <i class="bi bi-grid-3x3-gap"></i> Cards
+    </button>
+    <button type="button" class="btn btn-outline-light" [class.active]="viewMode === 'table'" (click)="viewMode = 'table'">
+      <i class="bi bi-table"></i> Tabla
+    </button>
+  </div>
+
+  <!-- Búsqueda y controles -->
   <div class="d-flex flex-wrap align-items-center justify-content-between mb-3 gap-2">
-    <h2 class="mb-0 flex-grow-1">Colección de Figuras de Anime</h2>
     <div class="input-group w-auto me-2">
       <input type="text" class="form-control" placeholder="Buscar por nombre, anime o personaje..." [(ngModel)]="search" (ngModelChange)="onSearchChange()">
     </div>
     <select class="form-select w-auto me-2" [(ngModel)]="pageSize" (ngModelChange)="onPageSizeChange()">
       <option *ngFor="let size of pageSizes" [ngValue]="size">{{ size }}</option>
     </select>
-    <button class="btn btn-primary" (click)="irACrear()">
-      <i class="bi bi-plus-lg"></i> Nueva
-    </button>
   </div>
 
-  <!-- Alertas -->
-  <div *ngIf="loading" class="alert alert-info d-flex align-items-center gap-2">
-    <div class="spinner-border spinner-border-sm" role="status"></div>
+  <!-- Feedback: loading, error, success -->
+  <div *ngIf="loading" class="d-flex align-items-center gap-2 mb-3">
+    <div class="spinner-border text-warning" role="status"></div>
     <span>Cargando...</span>
   </div>
   <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
   <div *ngIf="success" class="alert alert-success">{{ success }}</div>
 
-  <!-- Tabla de figuras -->
-  <div class="table-responsive" *ngIf="!loading && paginated.length">
-    <table class="table table-striped align-middle">
+  <!-- Vista Cards -->
+  <div *ngIf="viewMode === 'cards' && !loading && paginated.length" class="row g-4">
+    <div class="col-sm-6 col-lg-4" *ngFor="let figura of paginated">
+      <div class="card bg-dark text-light border border-secondary shadow-sm h-100">
+        <!-- Imagen si existe -->
+        <img *ngIf="figura.imagen" [src]="figura.imagen" class="card-img-top" [alt]="figura.nombre">
+        <div class="card-body">
+          <h5 class="card-title">{{ figura.nombre }}</h5>
+          <p class="card-text mb-1"><strong>Categoría:</strong> {{ figura.anime }}</p>
+          <p class="card-text mb-1"><strong>Precio:</strong> {{ figura.precio | currency:'EUR':'symbol':'1.0-2' }}</p>
+          <p class="card-text mb-2"><strong>Estado:</strong>
+            <span *ngIf="figura.stock === 0" class="badge bg-danger">Sin stock</span>
+            <span *ngIf="figura.stock > 0" class="badge bg-success">En stock</span>
+            <span class="ms-2">{{ figura.stock }}</span>
+          </p>
+          <!-- Botones de acción -->
+          <div class="d-flex gap-2">
+            <button class="btn btn-sm btn-outline-info" (click)="verDetalle(figura)">
+              <i class="bi bi-eye"></i>
+            </button>
+            <button class="btn btn-sm btn-outline-warning" (click)="editarFigura(figura)">
+              <i class="bi bi-pencil"></i>
+            </button>
+            <button class="btn btn-sm btn-outline-danger" (click)="eliminar(figura._id!, figura.nombre || '')">
+              <i class="bi bi-trash"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Vista Tabla -->
+  <div *ngIf="viewMode === 'table' && !loading && paginated.length" class="table-responsive">
+    <table class="table table-dark table-hover align-middle">
       <thead>
         <tr>
           <th>Nombre</th>
@@ -53,10 +101,10 @@
               <button class="btn btn-outline-info btn-sm me-1" (click)="verDetalle(figura)">
                 <i class="bi bi-eye"></i> Detalle
               </button>
-              <button class="btn btn-outline-secondary btn-sm me-1" (click)="editarFigura(figura)">
+              <button class="btn btn-outline-warning btn-sm me-1" (click)="editarFigura(figura)">
                 <i class="bi bi-pencil"></i> Editar
               </button>
-              <button class="btn btn-outline-danger btn-sm" (click)="eliminar(figura._id, figura.nombre)">
+              <button class="btn btn-outline-danger btn-sm" (click)="eliminar(figura._id!, figura.nombre || '')">
                 <i class="bi bi-trash"></i> Eliminar
               </button>
             </ng-container>
