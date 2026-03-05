@@ -22,6 +22,7 @@ const allowedOrigins = [
   "https://coleccion-anime-angular.vercel.app"
 ];
 
+
 const corsOptions = {
   origin: function(origin, callback) {
     if (!origin || allowedOrigins.includes(origin)) {
@@ -31,11 +32,20 @@ const corsOptions = {
     }
   },
   methods: ["GET","POST","PATCH","DELETE","OPTIONS"],
-  allowedHeaders: ["Content-Type","Authorization"]
+  allowedHeaders: ["Content-Type","Authorization"],
+  credentials: false,
+  preflightContinue: false,
+  optionsSuccessStatus: 204
 };
 
 app.use(cors(corsOptions));
 app.options('*', cors(corsOptions));
+
+// Middleware para evitar caché del CDN antes de las rutas
+app.use((req, res, next) => {
+  res.setHeader("Cache-Control", "no-store");
+  next();
+});
 
 // Logger (después de CORS, da igual el orden pero así queda claro)
 app.use(requestLogger);
