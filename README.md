@@ -89,24 +89,32 @@ Entidad: **Figura**
 ## 🏗️ Arquitectura y Estructura del Proyecto
 
 coleccion-anime/
+│
 ├── backend/
 │   ├── src/
-│   │   ├── config/        # conexión MongoDB
-│   │   ├── models/        # modelos Mongoose
-│   │   ├── controllers/   # lógica de negocio
-│   │   ├── routes/        # endpoints API
-│   │   └── middlewares/   # middlewares Express
-│   ├── server.js          # punto de entrada
-│   └── package.json
+│   │   ├── config/          # Configuración de la conexión a MongoDB
+│   │   ├── models/          # Modelos de datos con Mongoose
+│   │   ├── controllers/     # Lógica de negocio de la API
+│   │   ├── routes/          # Definición de endpoints de la API
+│   │   └── middlewares/     # Middlewares de Express
+│   │
+│   ├── server.js            # Punto de entrada del servidor Express
+│   └── package.json         # Dependencias y scripts del backend
+│
 ├── frontend-angular/
-│   ├── src/app/
-│   │   ├── components/    # componentes Angular
-│   │   ├── services/      # servicios HTTP
-│   │   └── app.module.ts
-│   └── package.json
+│   ├── src/
+│   │   └── app/
+│   │       ├── components/  # Componentes de Angular
+│   │       ├── services/    # Servicios HTTP para consumir la API
+│   │       └── app.module.ts
+│   │
+│   └── package.json         # Dependencias y scripts del frontend Angular
+│
 ├── frontend-react/
-│   └── src/
-└── README.md
+│   ├── src/                 # Aplicación React que también consume la API
+│   └── package.json
+│
+└── README.md                # Documentación del proyecto
 
 ---
 
