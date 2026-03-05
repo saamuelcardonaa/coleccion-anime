@@ -77,9 +77,9 @@ function FiguraDetail() {
             <div className="card bg-dark text-light shadow-sm h-100">
               <img
                 src={figura.imagen}
-                className="card-img-top"
+                className="card-img-top figura-detail-img"
                 alt={figura.nombre}
-                style={{ objectFit: "cover", height: "350px" }}
+                style={{ objectFit: "contain", height: "350px", borderRadius: "18px" }}
               />
             </div>
           </div>

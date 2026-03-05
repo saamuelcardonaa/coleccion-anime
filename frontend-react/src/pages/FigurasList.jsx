@@ -202,7 +202,7 @@ export default function FigurasList() {
 
       {/* Vista Cards: más visual y moderna */}
       {view === "cards" && (
-        <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
+        <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
           {paginated.length === 0 && !loading ? (
             <div className="col">
               <div className="alert alert-info text-center mb-0">
@@ -212,35 +212,50 @@ export default function FigurasList() {
           ) : (
             paginated.map((f) => (
               <div className="col" key={f._id}>
-                <div className="card bg-secondary text-light shadow-sm h-100">
-                  {/* Imagen de la figura o placeholder local si falta o falla */}
+                {/* Card principal con Bootstrap y efecto visual moderno */}
+                <div
+                  className="card bg-dark text-light shadow-lg border-0 card-hover h-100"
+                  style={{
+                    transition: "transform 0.25s, box-shadow 0.25s",
+                  }}
+                  onMouseEnter={e => {
+                    e.currentTarget.style.transform = "scale(1.04)";
+                    e.currentTarget.style.boxShadow = "0 12px 30px rgba(0,0,0,0.35)";
+                  }}
+                  onMouseLeave={e => {
+                    e.currentTarget.style.transform = "none";
+                    e.currentTarget.style.boxShadow = "";
+                  }}
+                >
+                  {/* Imagen de la figura, recortada y proporcional */}
                   <img
                     src={f.imagen ? f.imagen : "/placeholder.png"}
                     alt={f.nombre}
                     className="card-img-top"
-                    style={{ objectFit: "cover", height: "200px" }}
+                    style={{ height: "200px", objectFit: "cover", borderTopLeftRadius: "12px", borderTopRightRadius: "12px" }}
                     onError={e => { e.target.onerror = null; e.target.src = "/placeholder.png"; }}
                   />
-                  <div className="card-body d-flex flex-column">
-                    <h5 className="card-title">{f.nombre}</h5>
-                    <h6 className="card-subtitle mb-2 text-info">{f.anime}</h6>
-                    <p className="card-text">{f.personaje}</p>
-                    <div className="mb-2">
-                      <span className="badge bg-info text-dark me-2">
-                        ${f.precio}
-                      </span>
-                      <span className="badge bg-warning text-dark">
-                        Stock: {f.stock}
-                      </span>
+                  {/* Contenido de la card */}
+                  <div className="card-body d-flex flex-column gap-2">
+                    {/* Nombre y anime */}
+                    <h5 className="card-title mb-1">{f.nombre}</h5>
+                    <span className="badge bg-info text-dark mb-2 align-self-start">{f.anime}</span>
+                    {/* Personaje */}
+                    <p className="card-text mb-2 text-secondary">{f.personaje}</p>
+                    {/* Precio y stock */}
+                    <div className="d-flex gap-2 mb-2">
+                      <span className="badge bg-success fs-6">${f.precio}</span>
+                      <span className="badge bg-warning text-dark fs-6">Stock: {f.stock}</span>
                     </div>
-                    <div className="mt-auto d-flex gap-2">
-                      <button className="btn btn-sm btn-info" onClick={() => navigate(`/figuras/${f._id}`)}>
+                    {/* Botones de acción alineados con flexbox y Bootstrap */}
+                    <div className="d-flex justify-content-between gap-2 mt-auto">
+                      <button className="btn btn-outline-info btn-sm w-100" onClick={() => navigate(`/figuras/${f._id}`)}>
                         <i className="bi bi-eye me-1"></i> Ver
                       </button>
-                      <button className="btn btn-sm btn-warning" onClick={() => navigate(`/figuras/editar/${f._id}`)}>
+                      <button className="btn btn-outline-warning btn-sm w-100" onClick={() => navigate(`/figuras/editar/${f._id}`)}>
                         <i className="bi bi-pencil-square me-1"></i> Editar
                       </button>
-                      <button className="btn btn-sm btn-danger" onClick={() => handleDelete(f._id)}>
+                      <button className="btn btn-outline-danger btn-sm w-100" onClick={() => handleDelete(f._id)}>
                         <i className="bi bi-trash me-1"></i> Eliminar
                       </button>
                     </div>

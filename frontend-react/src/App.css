@@ -138,6 +138,14 @@ select {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
+.card-img-top {
+  transition: transform 0.2s ease;
+}
+
+.card-img-top:hover {
+  transform: scale(1.08);
+}
+
 .card-header {
   background-color: var(--light-bg);
   border-bottom: 1px solid #dee2e6;
@@ -299,4 +307,19 @@ select {
   .table-responsive {
     font-size: 0.875rem;
   }
+}
+
+/* Estilos para imágenes de detalles y lista */
+.figura-detail-img {
+  border-radius: 18px;
+  object-fit: contain;
+}
+
+.figura-list-img {
+  border-radius: 12px;
+  transition: transform 0.2s ease;
+}
+
+.figura-list-img:hover {
+  transform: scale(1.08);
 }
