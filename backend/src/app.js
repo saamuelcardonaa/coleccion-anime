@@ -9,8 +9,16 @@ import { requestLogger } from './middlewares/index.js';
 
 const app = express();
 
+
 // Middlewares generales
 app.use(express.json()); // parsea JSON en el cuerpo de las solicitudes
+
+// Añadir Vary y Cache-Control antes de CORS
+app.use((req, res, next) => {
+  res.setHeader("Vary", "Origin");
+  res.setHeader("Cache-Control", "no-store");
+  next();
+});
 
 // =====================
 // CORS (Angular + React + Vercel)
@@ -23,13 +31,16 @@ const allowedOrigins = [
 ];
 
 
+
 const corsOptions = {
   origin: function(origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("No permitido por CORS"));
-    }
+    if (!origin) return callback(null, true); // Permitir Postman y server-to-server
+    if (allowedOrigins.includes(origin)) return callback(null, true);
+    // Permitir previews de Vercel (coleccion-anime-git-*, *-saamuelcardonaas-projects.vercel.app)
+    if (/^https:\/\/coleccion-anime-git-[^\.]+\.vercel\.app$/.test(origin)) return callback(null, true);
+    if (/^https:\/\/[\w-]+-saamuelcardonaas-projects\.vercel\.app$/.test(origin)) return callback(null, true);
+    if (origin.endsWith('.vercel.app')) return callback(null, true); // fallback para otros previews
+    callback(new Error("No permitido por CORS"));
   },
   methods: ["GET","POST","PATCH","DELETE","OPTIONS"],
   allowedHeaders: ["Content-Type","Authorization"],
