@@ -1,6 +1,6 @@
 import React from "react";
 import { useEffect, useState } from "react";
-import { getFiguras } from "./services/api";
+import { getAllFiguras } from "./services/figuraService";
 
 export default function App() {
   const [figuras, setFiguras] = useState([]);
@@ -17,8 +17,8 @@ export default function App() {
       try {
         setLoading(true);
         setError("");
-        const data = await getFiguras();
-        setFiguras(data.data || []);
+        const figuras = await getAllFiguras();
+        setFiguras(figuras);
       } catch (e) {
         console.error(e);
         setError("No se pudieron cargar las figuras.");
