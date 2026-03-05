@@ -8,25 +8,32 @@
   <ng-container *ngIf="figura as f">
     <div class="card shadow">
       <div class="card-header d-flex justify-content-between align-items-center">
-        <h4 class="mb-0">Detalle de Figura</h4>
-        <span class="badge bg-secondary">ID: {{ f._id }}</span>
+        <div class="d-flex flex-column w-100">
+          <!-- Anime badge for visual hierarchy -->
+          <span class="badge bg-warning text-dark align-self-start mb-2">
+            {{ f.anime }}
+          </span>
+          <h4 class="mb-0">Detalle de Figura <span class="badge bg-secondary ms-2">ID: {{ f._id }}</span></h4>
+        </div>
       </div>
       <div class="card-body">
         <div class="row">
           <div class="col-md-8">
+            <!-- Visual hierarchy: Name and Price -->
+            <h3 class="fw-bold mb-1">{{ f.nombre }}</h3>
+            <h5 class="text-warning fw-bold mb-3">{{ f.precio }} €</h5>
             <table class="table table-borderless mb-0">
               <tbody>
-                <tr><th>Nombre</th><td>{{ f.nombre }}</td></tr>
                 <tr><th>Anime</th><td>{{ f.anime }}</td></tr>
                 <tr><th>Personaje</th><td>{{ f.personaje || '-' }}</td></tr>
-                <tr><th>Precio</th><td>{{ f.precio | currency:'EUR':'symbol':'1.0-2' }}</td></tr>
                 <tr><th>Stock</th><td>{{ f.stock }}</td></tr>
                 <tr><th>malId</th><td>{{ f.malId || '-' }}</td></tr>
                 <tr *ngIf="f.imagen">
                   <th>Imagen</th>
                   <td>
                     <ng-container *ngIf="f.imagen.startsWith('http'); else textoImagen">
-                      <img [src]="f.imagen" [alt]="f.nombre" class="img-fluid rounded" style="max-height: 200px; object-fit: cover;">
+                      <!-- Imagen de la figura con borde dorado al hover.-->
+                      <img [src]="f.imagen" [alt]="f.nombre" class="img-fluid rounded figura-img-centered hover-border-gold">
                     </ng-container>
                     <ng-template #textoImagen>{{ f.imagen }}</ng-template>
                   </td>

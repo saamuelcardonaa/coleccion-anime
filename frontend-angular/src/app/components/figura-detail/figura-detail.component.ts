@@ -13,6 +13,8 @@ export class FiguraDetailComponent implements OnInit {
   error: string | null = null;
   showModal = false;
   loadingDelete = false;
+  // Controla si el modal de zoom de imagen está abierto (para la profesora)
+  showZoom = false;
 
   constructor(
     private route: ActivatedRoute,

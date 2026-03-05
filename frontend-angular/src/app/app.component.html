@@ -12,20 +12,19 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
-      <!-- Links de navegación -->
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">Home</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/figuras" routerLinkActive="active">Catálogo</a>
-        </li>
-      </ul>
-      <!-- Botón CTA dorado a la derecha -->
-      <a class="btn btn-warning" routerLink="/figuras/nueva">
-        <i class="bi bi-plus-circle me-1"></i>
-        Añadir
-      </a>
+      <!-- Botones de navegación juntos a la derecha, estilo botón pero sin color dorado. Comentado para la profesora. -->
+      <div class="d-flex gap-2 ms-auto align-items-center">
+        <a class="btn btn-outline-light" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">
+          <i class="bi bi-house me-1"></i> Home
+        </a>
+        <a class="btn btn-outline-light" routerLink="/figuras" routerLinkActive="active">
+          <i class="bi bi-collection me-1"></i> Catálogo
+        </a>
+        <a class="btn btn-warning" routerLink="/figuras/nueva">
+          <i class="bi bi-plus-circle me-1"></i>
+          Añadir
+        </a>
+      </div>
     </div>
   </div>
 </nav>

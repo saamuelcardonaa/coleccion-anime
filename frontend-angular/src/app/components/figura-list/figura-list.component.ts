@@ -16,6 +16,13 @@ export class FiguraListComponent implements OnInit {
   page: number = 1;
   pageSize: number = 6;
   pageSizes: number[] = [6, 12, 24];
+  // Filtro de categoría (anime). Comentado para la profesora.
+  categoriaSeleccionada: string = '';
+  get categorias(): string[] {
+    // Devuelve todas las categorías únicas (anime) presentes en las figuras
+    const set = new Set(this.figuras.map(f => f.anime).filter(Boolean));
+    return Array.from(set).sort();
+  }
 
   figuraAEliminar: Figura | null = null;
   showModal = false;
@@ -138,10 +145,15 @@ export class FiguraListComponent implements OnInit {
     });
   }
 
+  // Filtrado por búsqueda y categoría. Comentado para la profesora.
   get filtered(): Figura[] {
-    if (!this.search) return this.figuras;
+    let arr = this.figuras;
+    if (this.categoriaSeleccionada) {
+      arr = arr.filter(f => f.anime === this.categoriaSeleccionada);
+    }
+    if (!this.search) return arr;
     const s = this.search.toLowerCase();
-    return this.figuras.filter(f =>
+    return arr.filter(f =>
       f.nombre.toLowerCase().includes(s) ||
       f.anime.toLowerCase().includes(s) ||
       (f.personaje && f.personaje.toLowerCase().includes(s))
