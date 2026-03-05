@@ -1,41 +1,50 @@
 <!-- src/app/app.component.html -->
 <!-- Template principal de la aplicación Angular -->
 
-<!-- Barra de navegación (navbar) con Bootstrap -->
-<nav class="navbar navbar-dark bg-dark">
+<!-- Navbar principal: fondo oscuro, texto claro, borde inferior -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark border-bottom border-secondary mb-4">
   <div class="container-fluid">
-    <span class="navbar-brand mb-0 h1">
-      🎌 {{ title }}
-    </span>
-  </div>
-</nav>
-
-<!-- Barra de navegación secundaria (navbar) con Bootstrap -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="#">Colección Anime</a>
+    <!-- Brand con icono y texto -->
+    <a class="navbar-brand d-flex align-items-center" routerLink="/">
+      <i class="bi bi-collection me-2"></i>
+      Colección Anime
+    </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav">
+      <!-- Links de navegación -->
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link" routerLink="/figuras" routerLinkActive="active">Listado</a>
+          <a class="nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">
+            Home
+          </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLink="/figuras/nueva" routerLinkActive="active">Crear</a>
+          <a class="nav-link" routerLink="/figuras" routerLinkActive="active">Figuras</a>
         </li>
+        <!-- Si tienes categorías, añade aquí otro link -->
+        <!-- <li class="nav-item">
+          <a class="nav-link" routerLink="/categorias" routerLinkActive="active">Categorías</a>
+        </li> -->
       </ul>
+      <!-- Botón CTA dorado a la derecha -->
+      <a class="btn btn-warning" routerLink="/figuras/nueva">
+        <i class="bi bi-plus-circle me-1"></i>
+        Añadir Figura
+      </a>
     </div>
   </div>
 </nav>
 
-<!-- Aquí se renderizan los componentes según la ruta -->
-<router-outlet></router-outlet>
+<!-- Contenido principal -->
+<main class="container py-4">
+  <!-- Aquí se renderizan los componentes según la ruta -->
+  <router-outlet></router-outlet>
+</main>
 
-<!-- Footer simple -->
-<footer class="bg-dark text-light text-center py-3 mt-5">
-  <p class="mb-0">
-    Desarrollado con <strong>Angular + Express + MongoDB</strong>
-  </p>
+<!-- Footer sencillo -->
+<footer class="bg-dark text-secondary text-center py-3 mt-5 border-top border-secondary">
+  <!-- Pie de página -->
+  <small>&copy; 2026 Colección Anime</small>
 </footer>
